@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="col-sm-12 text-center">
+    <h1>Sign up</h1>
+  </div>
+  <form class="form tt-login-form" name="form" ng-submit="form.$valid && register(form)" novalidate>
+    <div class="form-group has-error">
+      <p class="help-block">{{ errors.other }}</p>
+    </div>
+    <md-content layout-padding class="autoScroll">
+      <div style="height:10px"></div>
+      <md-input-container class="md-icon-float" ng-class="{ 'has-success': form.username.$valid && form.$submitted,
+                                              'has-error': form.username.$invalid && form.$submitted }">
+        <label>User Name</label>
+        <md-icon class="fa fa-user fa-2x"></md-icon>
+        <input ng-model="user.username" required name="username" type="text">
+      </md-input-container>
+      <div class="form-group has-error">
+        <p class="help-block" ng-show="form.username.$error.required && form.password.$error.required && form.$submitted">
+           Please enter your user name and password.
+        </p>
+        <p class="help-block" ng-show="form.username.$error.email && form.$submitted">
+           Please enter a valid user name.
+        </p>
+      </div>
+      <md-input-container class="md-icon-float" ng-class="{ 'has-success': form.password.$valid && form.$submitted,'has-error': form.password.$invalid && form.$submitted }" >
+        <label>Password</label>
+        <md-icon class="fa fa-key fa-2x"></md-icon>
+        <input type="password" name="password" ng-model="user.password"
+               ng-minlength="6"
+               required
+               mongoose-error/>
+      </md-input-container>
+      <div class="form-group has-error">
+        <p class="help-block"
+           ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+          Password must be at least 6 characters.
+        </p>
+        <p class="help-block" ng-show="form.password.$error.mongoose">
+          {{ errors.password }}
+        </p>
+        <p class="help-block" ng-show="form.password.$error.required && form.$submitted">
+          A password is required
+        </p>
+      </div>
+    </md-content>
+    <section layout="row" layout-sm="column" layout-align="center center">
+      <md-button class="md-primary" type="button" href="/login">Login</md-button>
+      <md-button class="md-raised md-primary" type="submit">Sign Up</md-button>
+    </section>
+  </form>
+</div>

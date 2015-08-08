@@ -1,0 +1,22 @@
+<md-content>
+  <md-list>
+    <md-subheader class="md-no-sticky">Live Match</md-subheader>
+    <md-list-item ng-repeat="match in matchs">
+      <p> {{ match.name }} </p>
+      <div>
+        <p>{{ match.score.dom}}</p>
+        <p>{{ match.score.ext}}</p>
+      </div>
+    </md-list-item>
+</md-content>
+
+<form class="match-form">
+  <p class="input-group">
+    <input type="text" class="form-control" placeholder="Add a new match here." ng-model="newMatch">
+    <span class="input-group-btn">
+      <md-button class="md-fab md-primary tt-fab-button" type="submit" ng-click="addMatch()" aria-label="Use Android">
+        <i class="fa fa-plus fa-lg"></i> 
+      </md-button>
+    </span>
+  </p>
+</form>
