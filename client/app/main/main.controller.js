@@ -75,12 +75,13 @@ angular.module('liveTtApp')
           parent: angular.element(document.body),
           targetEvent: ev,
           locals: {
-           dom: $scope.match.team.dom.players,
-           ext: $scope.match.team.ext.players
+           match: $scope.match
          }
         })
-        .then(function(answer) {
-          $scope.alert = 'You said the information was "' + answer + '".';
+        .then(function(match) {
+          console.log(match);
+          $scope.match = match;
+          $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
         }, function() {
           $scope.alert = 'You cancelled the dialog.';
         });
@@ -101,12 +102,8 @@ angular.module('liveTtApp')
         return;
       }
       $match.create($scope.newMatch).then(function(res){
-        $mdToast.show({
-          controller: 'ToastCtrl',
-          templateUrl: '/components/toast/add-match-success.html',
-          hideDelay: 3000,
-          position: 'bottom left'
-        });
+        $mdToast.show($mdToast.simple().content('Live correctement crée!').theme('success-toast'));
+        
         $location.path('/live/' + res.data._id);
         $scope.newMatch = {};
       })
@@ -121,15 +118,9 @@ angular.module('liveTtApp')
       teamId = $scope.match.team[teamType]._id;
       $match.addPlayer($scope.player[teamType], teamId).then(function(res){
         //Return Player with his id and set res to players array
-
-        $mdToast.show({
-          controller: 'ToastCtrl',
-          templateUrl: '/components/toast/add-player-success.html',
-          hideDelay: 3000,
-          position: 'bottom left'
-        });
+        $mdToast.show($mdToast.simple().content('Joueur correctement ajouté!').theme('success-toast'));
         form.$setPristine();
-        $scope.match.team.dom.players.push($scope.player[teamType]);
+        $scope.match.team[teamType].players.push($scope.player[teamType]);
         $scope.player[teamType] = {};
       })
     };
@@ -142,12 +133,7 @@ angular.module('liveTtApp')
       var teamId;
       teamId = $scope.match.team[teamType]._id;
       $match.removePlayer($scope.match.team[teamType].players[index]._id, teamId).then(function(res){
-        $mdToast.show({
-          controller: 'ToastCtrl',
-          templateUrl: '/components/toast/add-player-success.html',
-          hideDelay: 3000,
-          position: 'bottom left'
-        });
+        $mdToast.show($mdToast.simple().content('Joueur correctement Supprimé!').theme('danger-toast'));
         form.$setPristine();
         $scope.match.team.dom.players.push($scope.player[teamType]);
         $scope.player[teamType] = {};
