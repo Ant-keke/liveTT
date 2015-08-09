@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdToast, $state, $mdSidenav, $mdUtil, $log, $location) {
+  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $state, $mdSidenav, $mdUtil, $log, $location) {
 
     /** 
     * @State matchs 
@@ -66,6 +66,26 @@ angular.module('liveTtApp')
     $scope.tabs = {
       selectedIndex: 0
     };    
+
+
+    $scope.showAddGameModal = function(ev) {
+        $mdDialog.show({
+          controller: 'AddGameController',
+          templateUrl: '/app/main/components/add-game.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          locals: {
+           dom: $scope.match.team.dom.players,
+           ext: $scope.match.team.ext.players
+         }
+        })
+        .then(function(answer) {
+          $scope.alert = 'You said the information was "' + answer + '".';
+        }, function() {
+          $scope.alert = 'You cancelled the dialog.';
+        });
+    };
+    
 
     /** 
     * @State live.create 

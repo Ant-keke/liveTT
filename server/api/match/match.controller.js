@@ -12,11 +12,12 @@
 
 var _ = require('lodash');
 var Match = require('./match.model');
+var User = require('../user/user.model');
 var Team = require('../team/team.model');
 
 // Get list of matchs
 exports.index = function(req, res) {
-  Match.find({}).populate('team.dom team.ext author').exec(function (err, matchs) {
+  Match.find({}).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(matchs);
   });
@@ -24,12 +25,11 @@ exports.index = function(req, res) {
 
 // Get a single match
 exports.show = function(req, res) {
-  Match.findById(req.params.id).populate('team.dom team.ext author').exec(function (err, data) {
+  Match.findById(req.params.id).populate('team.dom team.ext').populate('author','username').exec(function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(404).send('Not Found'); }
     data.populate({path:'team.dom.players team.ext.players',model:'Player'}, function(err, match){
       if(err) { return handleError(res, err); }
-      console.log(match.team.dom.players[0]);
       return res.json(match);
     })
   });
@@ -38,6 +38,10 @@ exports.show = function(req, res) {
 // Creates a new match in the DB.
 exports.create = function(req, res) {
   //Init Teams
+  User.findById(req.body.author, function (err, user) {
+    if (err) { return handleError(res, err); }
+    req.body.author = user;
+  });
   req.body.team.dom = new Team({ name: req.body.team.dom.name});
   req.body.team.ext = new Team({ name: req.body.team.ext.name});
   req.body.team.dom.save();
