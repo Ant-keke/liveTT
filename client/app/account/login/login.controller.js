@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location) {
+  .controller('LoginCtrl', function ($scope, Auth, $location, $mdToast) {
     $scope.user = {};
     $scope.errors = {};
 
     $scope.login = function(form) {
       $scope.submitted = true;
-
       if(form.$valid) {
         Auth.login({
           username: $scope.user.username,

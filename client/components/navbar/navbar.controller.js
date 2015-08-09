@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+  .controller('NavbarCtrl', function ($scope, $location, Auth, $timeout, $mdToast, $mdSidenav, $mdUtil, $log, $state) {
+
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -14,10 +15,38 @@ angular.module('liveTtApp')
 
     $scope.logout = function() {
       Auth.logout();
-      $location.path('/login');
+      $state.go('main');
     };
 
     $scope.isActive = function(route) {
       return route === $location.path();
     };
+
+   /** 
+    * @SideNav 
+    */
+    $scope.togglesideNav = buildToggler('sideNav');
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildToggler(navID) {
+      var debounceFn =  $mdUtil.debounce(function(){
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug("toggle " + navID + " is done");
+              });
+          },300);
+      return debounceFn;
+    }
+
+    $scope.navigateTo = function(dest) {
+      $mdSidenav('sideNav').close()
+        .then(function () {
+          $log.debug("close sideNav is done");
+          $state.go(dest);
+        });
+    }
+    
   });

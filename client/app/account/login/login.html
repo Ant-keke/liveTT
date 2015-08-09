@@ -1,4 +1,5 @@
 <div class="container">
+  <div ng-include="'components/navbar/sidebar.html'"></div>
   <form class="form tt-login-form" name="form" ng-submit="form.$valid && login(form)" novalidate>
     <div class="form-group has-error">
       <p class="help-block">{{ errors.other }}</p>

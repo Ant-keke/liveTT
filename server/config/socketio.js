@@ -18,6 +18,8 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  require('../api/team/team.socket').register(socket);
+  require('../api/player/player.socket').register(socket);
   require('../api/match/match.socket').register(socket);
 }
 

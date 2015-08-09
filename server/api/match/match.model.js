@@ -6,11 +6,35 @@ var mongoose = require('mongoose'),
 var MatchSchema = new Schema({
   name: String,
   body: String,
-  score: {
-  	dom: { type: Number, min: 0, max: 18 },
-  	ext: { type: Number, min: 0, max: 18 }
+  division: String,
+  created: {type: Date, default: Date.now},
+  date: Date,
+  team: {
+    dom: {type: Schema.Types.ObjectId, ref:'Team'},
+  	ext: {type: Schema.Types.ObjectId, ref:'Team'}
   },
-  active: Boolean
+  author: {type: Schema.Types.ObjectId, ref: 'User'},
+  active: { type: Boolean, default: true }
 });
+
+
+/**
+ * Validations
+ */
+
+// Validate empty username
+MatchSchema
+  .path('name')
+  .validate(function(name) {
+    return name.length;
+  }, 'Match name cannot be blank');
+
+// Validate empty username
+MatchSchema
+  .path('division')
+  .validate(function(division) {
+    return division.length;
+  }, 'Match division cannot be blank');
+
 
 module.exports = mongoose.model('Match', MatchSchema);

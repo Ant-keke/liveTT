@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, $mdToast) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -21,13 +21,20 @@ angular.module('liveTtApp')
         var deferred = $q.defer();
 
         $http.post('/auth/local', {
-          email: user.email,
+          username: user.username,
           password: user.password
         }).
         success(function(data) {
           $cookieStore.put('token', data.token);
           currentUser = User.get();
           deferred.resolve(data);
+          /** Success notification */
+          $mdToast.show({
+            controller: 'ToastCtrl',
+            templateUrl: '/components/toast/login-success.html',
+            hideDelay: 3000,
+            position: 'bottom left'
+          });
           return cb();
         }).
         error(function(err) {
@@ -47,6 +54,12 @@ angular.module('liveTtApp')
       logout: function() {
         $cookieStore.remove('token');
         currentUser = {};
+        $mdToast.show({
+            controller: 'ToastCtrl',
+            templateUrl: '/components/toast/logout-success.html',
+            hideDelay: 3000,
+            position: 'bottom left'
+          });
       },
 
       /**

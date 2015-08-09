@@ -1,22 +1,81 @@
-<md-content>
-  <md-list>
-    <md-subheader class="md-no-sticky">Live Match</md-subheader>
-    <md-list-item ng-repeat="match in matchs">
-      <p> {{ match.name }} </p>
-      <div>
-        <p>{{ match.score.dom}}</p>
-        <p>{{ match.score.ext}}</p>
+<md-toolbar class="md-primary" md-scroll-shrink style="margin-top:64px;z-index:100">
+  <h2 class="md-toolbar-tools">
+    <span flex>Matchs en cours</span>
+    <md-button class="md-icon-button" aria-label="Refresh" ng-click="refreshMatchs()">
+        <i class="fa fa-refresh"></i>
+    </md-button>
+    <md-button class="md-icon-button" aria-label="Refresh" ng-click="toggleFilter()">
+        <i class="fa fa-filter"></i>
+    </md-button>
+  </h2>
+</md-toolbar>
+<section layout="row" flex>
+  <div ng-include="'components/navbar/sidebar.html'"></div>
+  <!-- Filter Side Nav Right -->
+  <md-sidenav class="md-sidenav-right md-whiteframe-z2 " md-component-id="filterMatchs" style="position:fixed;margin-top:64px">
+    <md-toolbar class="md-theme-indigo tt-filterNav">
+      <h1 class="md-toolbar-tools">Filtrer les Matchs</h1>
+    </md-toolbar>
+    <md-content layout-padding>
+      <div layout layout-sm="column">
+        <md-input-container flex>
+          <label>Name</label>
+          <input ng-model="search.name">
+        </md-input-container>
       </div>
-    </md-list-item>
-</md-content>
+    </md-content>
+    <md-content layout-padding>
+      <div layout layout-sm="column">
+        <md-input-container flex>
+          <label>Equipe à domicile</label>
+          <input ng-model="search.team.dom.name">
+        </md-input-container>
+      </div>
+    </md-content>
+    <md-content layout-padding>
+      <div layout layout-sm="column">
+        <md-input-container flex>
+          <label>Equipe à l'extérieur</label>
+          <input ng-model="search.team.ext.name">
+        </md-input-container>
+      </div>
+    </md-content>
+    <md-content layout-padding>
+      <div layout layout-sm="column">
+        <md-select placeholder="Division" ng-model="search.division">
+          <option value=""></option>
+          <md-option ng-repeat="div in divisions" value="{{div}}">{{div}}</md-option>
+        </md-select>
+      </div>
+    </md-content>
+  </md-sidenav>
 
-<form class="match-form">
-  <p class="input-group">
-    <input type="text" class="form-control" placeholder="Add a new match here." ng-model="newMatch">
-    <span class="input-group-btn">
-      <md-button class="md-fab md-primary tt-fab-button" type="submit" ng-click="addMatch()" aria-label="Use Android">
-        <i class="fa fa-plus fa-lg"></i> 
-      </md-button>
-    </span>
-  </p>
-</form>
+
+  <div class="container">
+    <md-content>
+      <md-list>
+        <md-list-item class="md-2-line" ng-repeat="match in matchs | filter:search">
+          <div class="md-list-item-text">
+            <md-card>
+              <md-card-content>
+                <section class="row tt-score" style="margin-bottom:5px" layout="row" layout-sm="column" layout-align="center center">
+                  <h2>{{ match.team.dom.name }}  {{ match.team.dom.score }} - {{ match.team.ext.score }}
+                   {{ match.team.ext.name }}</h2>
+                </section>
+                <h3 class="text-center"> {{ match.name }} </h3>
+                <p> {{ match.body }} </p>
+              </md-card-content>
+              <div class="md-actions" layout="row" layout-align="end center">
+                <span>Le {{match.date | date:'dd-MM-yyyy'}} par {{match.author.name}}</span>
+                <md-button href="/live/{{match._id}}">Suivre</md-button>
+              </div>
+            </md-card>
+          </div>
+        </md-list-item>
+      </md-list>
+    </md-content>
+    <md-button class="md-fab md-primary tt-fab-button" href="/match/new" aria-label="New Match">
+      <i class="fa fa-plus fa-lg"></i> 
+    </md-button>
+  </div>
+</section>

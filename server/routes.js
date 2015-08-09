@@ -10,8 +10,10 @@ var path = require('path');
 module.exports = function(app) {
 
   // Insert routes below
-  app.use('/api/matchs', require('./api/match'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/players', require('./api/player'));
+  app.use('/api/teams', require('./api/team'));
+  app.use('/api/matchs', require('./api/match'));
 
   app.use('/auth', require('./auth'));
   

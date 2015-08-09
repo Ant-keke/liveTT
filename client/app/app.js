@@ -7,7 +7,8 @@ angular.module('liveTtApp', [
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',
-  'ngMaterial'
+  'ngMaterial',
+  'ngMessages'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -53,4 +54,10 @@ angular.module('liveTtApp', [
         }
       });
     });
+  })
+
+  .config(function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+      .primaryPalette('indigo')
+      .accentPalette('blue');
   });
