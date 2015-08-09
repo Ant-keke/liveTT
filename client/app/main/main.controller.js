@@ -67,7 +67,6 @@ angular.module('liveTtApp')
       selectedIndex: 0
     };    
 
-
     $scope.showAddGameModal = function(ev) {
         $mdDialog.show({
           controller: 'AddGameController',
@@ -79,7 +78,6 @@ angular.module('liveTtApp')
          }
         })
         .then(function(match) {
-          console.log(match);
           $scope.match = match;
           $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
         }, function() {
@@ -87,7 +85,31 @@ angular.module('liveTtApp')
         });
     };
     
-
+    $scope.showEditGameModal = function(ev, index) {
+        $mdDialog.show({
+          controller: 'EditGameController',
+          templateUrl: '/app/main/components/edit-game.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          locals: {
+           match: $scope.match,
+           index: index,
+         }
+        })
+        .then(function(match) {
+          $scope.match = match;
+          $mdToast.show($mdToast.simple().content('Match correctement édité!').theme('success-toast'));
+        }, function() {
+          $scope.alert = 'You cancelled the dialog.';
+        });
+    };
+    
+    $scope.deleteGame = function(index) {
+      console.log('yes');
+      if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
+        match.games.splice($index,1)
+      }
+    };
     /** 
     * @State live.create 
     * @route /match/new 
@@ -115,6 +137,7 @@ angular.module('liveTtApp')
     */
     $scope.addPlayer = function(teamType, form) {
       var teamId;
+      console.log('here');
       teamId = $scope.match.team[teamType]._id;
       $match.addPlayer($scope.player[teamType], teamId).then(function(res){
         //Return Player with his id and set res to players array
