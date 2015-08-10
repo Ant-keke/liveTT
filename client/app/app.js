@@ -11,6 +11,7 @@ angular.module('liveTtApp', [
   'ngMessages'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+    $httpProvider.interceptors.push('httpRequestInterceptor');
     $urlRouterProvider
       .otherwise('/');
 
@@ -42,6 +43,19 @@ angular.module('liveTtApp', [
         }
       }
     };
+  })
+  
+  .factory('httpRequestInterceptor', function ($q, $location, $mdToast) {
+      return {
+          'responseError': function(rejection) {
+              // do something on error
+              if(rejection.status === 404){
+                  $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
+                  $location.href = '/';                    
+              }
+              return $q.reject(rejection);
+           }
+       };
   })
 
   .run(function ($rootScope, $location, Auth) {

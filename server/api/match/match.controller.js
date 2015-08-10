@@ -15,6 +15,8 @@ var Match = require('./match.model');
 var User = require('../user/user.model');
 var Team = require('../team/team.model');
 var Game = require('../game/game.model');
+var Player = require('../player/player.model');
+var promise = require('promise');
 
 // Get list of matchs
 exports.index = function(req, res) {
@@ -71,17 +73,47 @@ var Team = require('../team/team.model');
 
 
 
-// Updates an existing match in the DB.
+// Addgame in a match in the DB.
 exports.addGame = function(req, res) {
   Match.findById(req.params.id, function (err, match) {
     if (err) { return handleError(res, err); }
     if(!match) { return res.status(404).send('Not Found'); }
-    var game = Game(req.body).save();
-    match.games.push(game);
-    updatedmatch.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.status(200).json(game);
-    });
+    var dom = [];
+    var ext = [];
+    for (var i = 0; i < req.body.dom.length; i++) {
+      dom[i] = Player.findById(req.body.dom[i]);
+    };
+    for (var i = 0; i < req.body.ext.length; i++) {
+      ext[i] = Player.findById(req.body.ext[i]);
+    };
+    promise.all(dom).then(function(res){
+      dom = res;
+      return true;
+    }).then(function(){
+      promise.all(ext).then(function(res){
+        ext = res;
+        return true;
+      }).then(function(){
+        Game({
+          dom: dom,
+          ext: ext,
+          score: req.body.score
+        }).save().then(function(game){
+          console.log(game);
+          match.games = match.games || [];
+          match.games.push(game);
+          match.save(function (err) {
+            game.populate("dom ext", function(err,game){
+              if (err) { return handleError(res, err); }
+              return res.status(200).json(game);
+            });
+          })
+        },function(err){
+          console.log(err);
+          return res.status(400).send('Game not added');
+        });
+      })
+    })
   });
 };
 
@@ -90,11 +122,10 @@ exports.deleteGame = function(req, res) {
   Match.findById(req.params.id, function (err, match) {
     if (err) { return handleError(res, err); }
     if(!match) { return res.status(404).send('Not Found'); }
-
     Game.findById(req.body._id,function( err, game) {
       game.remove();
       match.games.push(game);
-      updatedmatch.save(function (err) {
+      match.save(function (err) {
         if (err) { return handleError(res, err); }
         return res.status(200);
       });

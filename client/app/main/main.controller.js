@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $state, $mdSidenav, $mdUtil, $log, $location) {
+  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location) {
 
     /** 
     * @State matchs 
@@ -42,7 +42,11 @@ angular.module('liveTtApp')
     if ($stateParams.id) {
       $match.getMatch($stateParams.id).then(function(match) {
         $scope.match = match;
+        $scope.match.games = $scope.match.games || [];
         socket.syncUpdates('match', $scope.match);
+      },function(err){
+        $mdToast.show($mdToast.simple().content('Live introuvable!').theme('danger-toast'));
+        $location.path('/live');
       });
     }
     
@@ -51,21 +55,9 @@ angular.module('liveTtApp')
     };
     $scope.updateGames = function() {
       $http.put('/api/matchs/' + match._id, $scope.match).then(function(res){
-        console.log(res);
         $scope.lastUpdated = Date.now();
       });
     };
-    
-    /** 
-    * @State live 
-    * @route /live/:id 
-    */
-    if ($stateParams.id) {
-      $match.getMatch($stateParams.id).then(function(match) {
-        $scope.match = match;
-        socket.syncUpdates('match', $scope.match);
-      });
-    }
     
     $scope.showAddGameModal = function(ev) {
         $mdDialog.show({
@@ -77,11 +69,14 @@ angular.module('liveTtApp')
            match: angular.copy($scope.match)
          }
         })
-        .then(function(match) {
-          $http.post('/api/matchs/' + match._id + '/games', match).then(function(res) {
-            console.log(res);
-            $scope.match = res;
+        .then(function(game) {
+          console.log(game);
+          $http.post('/api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
+            $scope.match.games.push(res.data);
             $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
+          },
+          function(err){
+            $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
           });
         });
     };
@@ -101,7 +96,7 @@ angular.module('liveTtApp')
           $scope.match = match;
           $mdToast.show($mdToast.simple().content('Match correctement édité!').theme('success-toast'));
         }, function() {
-          $scope.alert = 'You cancelled the dialog.';
+          $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
         });
     };
     
@@ -139,7 +134,7 @@ angular.module('liveTtApp')
     $scope.deleteGame = function(index) {
       if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
         // $http. call here
-        match.games.splice($index,1)
+        $scope.match.games.splice($index,1)
       }
     };
     /** 
