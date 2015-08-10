@@ -8,7 +8,9 @@ var MatchSchema = new Schema({
   body: String,
   division: String,
   created: {type: Date, default: Date.now},
+  updated: {type: Date, default: Date.now},
   date: Date,
+  game: [{type: Schema.Types.ObjectId, ref:'Game'}],
   team: {
     dom: {type: Schema.Types.ObjectId, ref:'Team'},
   	ext: {type: Schema.Types.ObjectId, ref:'Team'}

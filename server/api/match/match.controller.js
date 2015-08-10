@@ -14,6 +14,7 @@ var _ = require('lodash');
 var Match = require('./match.model');
 var User = require('../user/user.model');
 var Team = require('../team/team.model');
+var Game = require('../game/game.model');
 
 // Get list of matchs
 exports.index = function(req, res) {
@@ -62,6 +63,41 @@ exports.update = function(req, res) {
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.status(200).json(match);
+    });
+  });
+};
+
+var Team = require('../team/team.model');
+
+
+
+// Updates an existing match in the DB.
+exports.addGame = function(req, res) {
+  Match.findById(req.params.id, function (err, match) {
+    if (err) { return handleError(res, err); }
+    if(!match) { return res.status(404).send('Not Found'); }
+    var game = Game(req.body).save();
+    match.games.push(game);
+    updatedmatch.save(function (err) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(game);
+    });
+  });
+};
+
+// Updates an existing match in the DB.
+exports.deleteGame = function(req, res) {
+  Match.findById(req.params.id, function (err, match) {
+    if (err) { return handleError(res, err); }
+    if(!match) { return res.status(404).send('Not Found'); }
+
+    Game.findById(req.body._id,function( err, game) {
+      game.remove();
+      match.games.push(game);
+      updatedmatch.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.status(200);
+      });
     });
   });
 };

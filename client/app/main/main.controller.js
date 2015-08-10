@@ -33,9 +33,6 @@ angular.module('liveTtApp')
 
 
     
-    $scope.deleteMatch = function(match) {
-      $http.delete('/api/matchs/' + match._id);
-    };
     $scope.divisions = ['PRO A','PRO B','N1','N2','N3','PNZ','R1','R2','R3','R4','R5','PR','D1','D2','D3','D4','D5'];
     
     /** 
@@ -49,24 +46,27 @@ angular.module('liveTtApp')
       });
     }
     
-    $scope.addGame = function() {
-      if(!$scope.newGame) {
-        return;
-      }
-      $scope.match.games.push($scope.newGame);
-      $http.post('/api/matchs/' + $scope.match._id +'/game', $scope.newGame).then(function(res){
-      });
-      $scope.newGame = '';
+    $scope.deleteMatch = function(match) {
+      $http.delete('/api/matchs/' + match._id);
     };
-
-    $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('match');
-    });
-
-    $scope.tabs = {
-      selectedIndex: 0
-    };    
-
+    $scope.updateGames = function() {
+      $http.put('/api/matchs/' + match._id, $scope.match).then(function(res){
+        console.log(res);
+        $scope.lastUpdated = Date.now();
+      });
+    };
+    
+    /** 
+    * @State live 
+    * @route /live/:id 
+    */
+    if ($stateParams.id) {
+      $match.getMatch($stateParams.id).then(function(match) {
+        $scope.match = match;
+        socket.syncUpdates('match', $scope.match);
+      });
+    }
+    
     $scope.showAddGameModal = function(ev) {
         $mdDialog.show({
           controller: 'AddGameController',
@@ -74,14 +74,15 @@ angular.module('liveTtApp')
           parent: angular.element(document.body),
           targetEvent: ev,
           locals: {
-           match: $scope.match
+           match: angular.copy($scope.match)
          }
         })
         .then(function(match) {
-          $scope.match = match;
-          $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
-        }, function() {
-          $scope.alert = 'You cancelled the dialog.';
+          $http.post('/api/matchs/' + match._id + '/games', match).then(function(res) {
+            console.log(res);
+            $scope.match = res;
+            $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
+          });
         });
     };
     
@@ -104,9 +105,40 @@ angular.module('liveTtApp')
         });
     };
     
+    $scope.updateSet = function(matchId,teamType){
+      $scope.match.games[matchId].score[teamType] = (++$scope.match.games[matchId].score[teamType] % 4);
+    };
+
+    $scope.updatePoints = function(matchId, setId, teamType){
+      var enabled = true;
+      var teamOpp = (teamType == 'dom') ? 'ext' : 'dom';
+      /* Check if precedent sets are finished */
+      for (var i = 0; i < setId; i++) {
+        if($scope.match.games[matchId].score.details[i].dom < 11 && $scope.match.games[matchId].score.details[i].ext < 11) {
+          enabled = false;
+          return;
+        }
+      };
+      /* Check if last set */
+      if(setId < 4 ) {
+        if($scope.match.games[matchId].score.details[setId + 1].dom !== 0 || $scope.match.games[matchId].score.details[setId + 1].ext !== 0) {
+          enabled = false;
+        }
+      }
+      /* Update points if enabled */
+      if (enabled) {
+        if($scope.match.games[matchId].score.details[setId][teamType] < 11 || ($scope.match.games[matchId].score.details[setId][teamType] - 1 <= $scope.match.games[matchId].score.details[setId][teamOpp]) ) {
+          $scope.match.games[matchId].score.details[setId][teamType]++;
+        } else {
+          $scope.match.games[matchId].score.details[setId][teamType] = 0;
+        }
+      }
+    };
+
+
     $scope.deleteGame = function(index) {
-      console.log('yes');
       if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
+        // $http. call here
         match.games.splice($index,1)
       }
     };
@@ -137,7 +169,6 @@ angular.module('liveTtApp')
     */
     $scope.addPlayer = function(teamType, form) {
       var teamId;
-      console.log('here');
       teamId = $scope.match.team[teamType]._id;
       $match.addPlayer($scope.player[teamType], teamId).then(function(res){
         //Return Player with his id and set res to players array
