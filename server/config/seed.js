@@ -69,13 +69,13 @@ Player.find({}).remove(function() {
 }).then(function(){
   Team.find({}).remove(function() {
     dom = new Team({
-     name :"Roche Lez Beaupre",
+     name :"AL Croix Rousse 1",
      score :7,
      players: pdom
     });
     dom.save(); 
     ext = new Team({
-     name :"Sochaux",
+     name :"AL Paris 16",
      score :4,
      players: pext
     });
@@ -99,14 +99,14 @@ Player.find({}).remove(function() {
       Match.find({}).remove(function() {
         Match.create({
           date : Date(2015, 09, 14),
-          division : 'N1',
-          name : 'Match Important a domicile',
+          division : 'N2',
+          name : 'Match du maintien pour les Croix Roussiens',
+          body : 'Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l\'imprimerie depuis'
           team: {
             dom: dom,
             ext: ext
           },
           author: admin,
-          body : 'Integration with popular tools such as Bower, Grunt, Karma, Mocha, JSHint, Node Inspector, Livereload, Protractor, Jade, Stylus, Sass, CoffeeScript, and Less.'
         }, {
           date : Date(2015, 09, 15),
           division : 'PR',

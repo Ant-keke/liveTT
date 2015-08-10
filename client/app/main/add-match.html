@@ -1,0 +1,53 @@
+<section layout="row" flex style="margin-top:128px">
+  <div ng-include="'components/navbar/sidebar.html'"></div>
+  <div class="container">
+    <md-content>
+      <form name="form" novalidate ng-submit="form.$valid && addMatch()">
+        <div layout layout-sm="column">
+          <md-input-container flex>
+            <label>Equipe à domicile (*)</label>
+            <input required ng-model="newMatch.team.dom.name" name="domName">
+            <div ng-show="form.$submitted" ng-messages="form.domName.$error">
+              <div ng-message="required">Merci de renseigner le nom de l'équipe évoluant à domicile.</div>
+            </div>
+          </md-input-container>
+          <md-input-container flex>
+            <label>Equipe à l'extérieur (*)</label>
+            <input ng-model="newMatch.team.ext.name" name="extName" required>
+            <div ng-show="form.$submitted" ng-messages="form.extName.$error">
+              <div ng-message="required">Merci de renseigner le nom de l'équipe évoluant à l'extérieur.</div>
+            </div>
+          </md-input-container>
+          <md-select placeholder="Division (*)" ng-model="newMatch.division" required name="division">
+            <md-option ng-repeat="div in divisions" value="{{div}}">{{div}}</md-option>
+          </md-select>
+        </div>
+        <div layout layout-sm="column">
+          <md-input-container style="width:80%">
+            <label>Title (*)</label>
+            <input ng-model="newMatch.name" required name="name">
+            <div ng-show="form.$submitted" ng-messages="form.name.$error">
+              <div ng-message="required">Merci de donner un nom à votre rencontre.</div>
+            </div>
+          </md-input-container>
+          <md-input-container flex>
+            <label>Date (*)</label>
+            <input type="date" ng-model="newMatch.date" name="date" required>
+            <div ng-show="form.$submitted" ng-messages="form.date.$error">
+              <div ng-message="required">Merci de donner la date de votre rencontre.</div>
+            </div>
+          </md-input-container>
+        </div>
+        <div layout layout-sm="column">
+          <md-input-container flex>
+            <label>Presentation</label>
+            <textarea ng-model="newMatch.body" columns="1" md-maxlength="350"></textarea>
+          </md-input-container>
+        </div>
+        <section layout="row" layout-sm="column" layout-align="center center">
+          <md-button class="md-raised md-primary" type="submit">Créer</md-button>
+        </section>
+      </form>
+    </md-content>
+  </div>
+</section>

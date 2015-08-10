@@ -1,0 +1,156 @@
+<div ng-include="'components/navbar/sidebar.html'"></div>
+<md-toolbar md-scroll-shrink style="margin-top:64px">
+<div class="md-toolbar-tools" style="width:100%">
+  <h3>
+	  <span>{{ match.team.dom.name }}  {{ match.team.dom.score }} - {{ match.team.ext.score }}  {{ match.team.ext.name }}</span>
+  </h3>
+  <md-button class="md-icon-button" aria-label="Refresh" ng-click="refreshMatch()" style="position:relative;right:0px;top:0px">
+      <i class="fa fa-refresh"></i>
+  </md-button>
+</div>
+</md-toolbar>
+<section class="tt-live-container">
+  <md-content>
+    <md-tabs class="md-primary md-hue-4" md-selected="tabs.selectedIndex" md-align-tabs="{{tabs.bottom ? 'bottom' : 'top'}}" >
+      <md-tab id="tab1">
+        <md-tab-label><md-icon class="fa fa-history" style="color:#FFF" ></md-icon></md-tab-label>
+        <md-tab-body>
+          <div class="container">
+            <h3 class="md-title" > {{ match.name | uppercase }} </h3>
+            <p > {{ match.body }} </p>
+            <div ng-repeat="(matchIndex, game) in match.games">
+              <md-card>
+                <md-card-content class="card-score">
+                  <div layout="row" style="font-size: 1.3em;line-height: 1.25rem;padding-top:15px">
+                    <div flex="55" >
+                      <div ng-repeat="player in game.dom" style="padding-bottom:10px;font-size: 0.8em;" >{{player.firstname | uppercase}} {{player.lastname | uppercase}}<p>({{ player.points }})</p></div> 
+                    </div>
+                    <div flex="10" style="position:relative;padding-left:7px;margin-top:10px;color:#006064;font-size:1.4em">
+                      <span ng-click="updateSet(matchIndex, 'dom')">{{game.score.dom}}</span>
+                    </div>
+                    <div flex="35" layout="row">
+                      <div flex="20" ng-repeat="(setId,points) in game.score.details" ng-click="updatePoints(matchIndex, setId,'dom')" style="position:relative;margin-top:10px">
+                        {{points.dom}}
+                      </div>
+                    </div>
+                    <div flex="20" layout="row" style="position:relative;top:-30px">
+                      <md-button class="md-icon-button" ng-click="deleteGame(index)" aria-label >
+                        <md-icon class="fa fa-remove"></md-icon>
+                      </md-button>
+                    </div>
+                  </div>
+                  <md-divider style="margin:5px 0px 10px 0px;"></md-divider>
+                  <div layout="row" style="font-size: 1.3em;line-height: 1.25rem;padding-top:15px">
+                    <div flex="55">
+                      <div ng-repeat="player in game.ext" style="padding-bottom:10px;font-size: 0.8em;">{{player.firstname | uppercase}} {{player.lastname | uppercase}}<p>({{ player.points }})</p></div> 
+                    </div>
+                    <div flex="10"  style="position:relative;padding-left:7px;margin-top:10px;color:#006064;font-size:1.4em">
+                      <span ng-click="updateSet(matchIndex, 'ext')">{{game.score.ext}}</span>
+                    </div>
+                    <div flex="35" layout="row">
+                      <div flex="20" ng-repeat="(setId, points) in game.score.details" ng-click="updatePoints(matchIndex, setId,'ext')" style="margin-top:10px">{{points.ext}}</div>
+                    </div>
+                  </div>
+                </md-card-content>
+              </md-card>
+            </div>
+      		</div>
+        </md-tab-body>
+      </md-tab>
+      <md-tab id="tab2">
+        <md-tab-label><md-icon class="fa fa-comment" style="color:#FFF;" ></md-icon> <span>{{ match.comments.length}} Commentaires</md-tab-label>
+        <md-tab-body>
+        </md-tab-body>
+      </md-tab>
+      <md-tab id="tab3">
+        <md-tab-label><md-icon class="fa fa-group" style="color:#FFF;position:relative;top:3px" ></md-icon><span>Equipes</span></md-tab-label>
+        <md-tab-body>
+          <section >
+            <h4 class="text-center">{{match.team.dom.name | uppercase}}</h4>
+            <form name="addDomPlayer" novalidate ng-submit="addDomPlayer.$valid && addPlayer('dom', addDomPlayer)" >
+              <div layout layout-sm="row" style="margin-left:4%">
+                <md-input-container style="width:28%">
+                  <label>Nom</label>
+                  <input ng-model="player.dom.lastname" name="pdomlastname" required>
+                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomlastname.$error">
+                    <div ng-message="required">Nom du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container style="width:28%">
+                  <label>Prénom</label>
+                  <input ng-model="player.dom.firstname" name="pdomfirstname" required>
+                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomfirstname.$error">
+                    <div ng-message="required">Prénom du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container style="width:20%">
+                  <label>Points</label>
+                  <input type="number" ng-model="player.dom.points" name="pdompoints" required>
+                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdompoints.$error">
+                    <div ng-message="required">Nombre de points du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <div style="position:relative;top:15px;float:right" >
+                  <md-button class="md-raised md-primary pull-right" type="submit">Ajouter</md-button>
+                </div>
+              </div>
+            </form>
+            <md-list>
+              <md-list-item class="md-2-line " ng-repeat="player in match.team.dom.players" layout="row"
+                  layout-wrap>
+                <div class="md-item-text md-whiteframe-z1 card-player" flex>
+                  <h3 class="text-center opacity-8">{{ player.firstname | uppercase}} {{player.lastname | uppercase}}</h3>
+                  <p class="text-center opacity-6"> {{ player.points }} points</p>
+                </div>
+              </md-list-item>
+            </md-list>
+          </section>
+          <section >
+            <h4 class="text-center">{{match.team.ext.name | uppercase}}</h4>
+            <form name="addExtPlayers" novalidate ng-submit="addExtPlayers.$valid && addPlayer('ext', addExtPlayers)" >
+              <div layout layout-sm="row" style="margin-left:4%">
+                <md-input-container style="width:28%">
+                  <label>Nom</label>
+                  <input ng-model="player.ext.lastname" name="pextlastname" required>
+                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextlastname.$error">
+                    <div ng-message="require  d">Nom du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container style="width:28%">
+                  <label>Prénom</label>
+                  <input ng-model="player.ext.firstname" name="pextfirstname" required>
+                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextfirstname.$error">
+                    <div ng-message="required">Prénom du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container style="width:20%">
+                  <label>Points</label>
+                  <input type="number" ng-model="player.ext.points" name="pextpoints" required>
+                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextpoints.$error">
+                    <div ng-message="required">Nombre de points du joueur requis.</div>
+                  </div>
+                </md-input-container>
+                <div style="position:relative;top:15px;float:right" >
+                  <md-button class="md-raised md-primary pull-right" type="submit">Ajouter</md-button>
+                </div>
+              </div>
+            </form>
+            <md-list>
+              <md-list-item class="md-2-line " ng-repeat="player in match.team.ext.players" layout="row"
+                  layout-wrap>
+                <div class="md-item-text md-whiteframe-z1  card-player" flex>
+                  <h3 class="text-center opacity-8">{{ player.firstname | uppercase }} {{player.lastname | uppercase }}</h3>
+                  <p class="text-center opacity-6"> {{ player.points }} points</p>
+                </div>
+              </md-list-item>
+            </md-list>
+          </section>
+        </md-tab-body>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+  <md-button ng-show="tabs.selectedIndex == 0" class="md-fab md-primary tt-fab-button" ng-click="showAddGameModal($event)" aria-label="New Match">
+    <i class="fa fa-plus fa-lg"></i> 
+  </md-button>
+</section>
+
