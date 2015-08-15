@@ -113,7 +113,8 @@ md-content {
     border-color: rgb(3, 155, 229);
     color: rgb(212, 234, 242);
     font-weight: 800;
-    background-image: url('../assets/images/waves.png');
+    background-image: linear-gradient(to bottom,#5C6BC0 0,#3949AB 100%);
+    /* background-image: url('../assets/images/waves.png'); */
 }
 
 .card-player {
@@ -151,4 +152,20 @@ md-content {
 
 .opacity-9 {
   opacity: 0.9;
+}
+
+.tt-score-sets {
+  top:-6px;
+  color : rgba(255, 255, 255, 0.6);
+  position:relative;
+  font-size:1.5em;
+  font-weight:800;
+}
+
+.tt-score-points {
+  top:-6px;
+  color : rgba(255, 255, 255, 0.9);
+  position:relative;
+  font-size:1.1em;
+  font-weight:600;
 }

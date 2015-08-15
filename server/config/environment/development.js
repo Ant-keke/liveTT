@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/livett-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };

@@ -42,6 +42,20 @@ exports.update = function(req, res) {
   });
 };
 
+
+// Updates an existing game in the DB.
+exports.updateScore = function(req, res) {
+  Game.findById(req.params.id, function (err, game) {
+    if (err) { return handleError(res, err); }
+    if(!game) { return res.status(404).send('Not Found'); }
+    game.score = req.body;
+    game.save(function (err) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(game);
+    });
+  });
+};
+
 // Deletes a game from the DB.
 exports.destroy = function(req, res) {
   Game.findById(req.params.id, function (err, game) {

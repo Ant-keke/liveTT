@@ -8,33 +8,33 @@
       <div style="height:10px"></div>
       <md-input-container class="md-icon-float" ng-class="{ 'has-success': form.username.$valid && form.$submitted,
                                               'has-error': form.username.$invalid && form.$submitted }">
-        <label>User Name</label>
+        <label>Pseudo</label>
         <md-icon class="fa fa-user fa-2x"></md-icon>
         <input ng-model="user.username" required name="username" type="text">
       </md-input-container>
       <div class="form-group has-error">
         <p class="help-block" ng-show="form.username.$error.required && form.password.$error.required && form.$submitted">
-           Please enter your user name and password.
+           Merci de renseigner un pseudonyme et un mot de passe.
         </p>
-        <p class="help-block" ng-show="form.username.$error.email && form.$submitted">
-           Please enter a valid user name.
+        <p class="help-block" ng-show="form.username.$username.email && form.$submitted">
+           Merci de renseigner un pseudonyme valide.
         </p>
       </div>
       <md-input-container class="md-icon-float" ng-class="{ 'has-success': form.password.$valid && form.$submitted,
                                               'has-error': form.password.$invalid && form.$submitted }"s >
-        <label>Password</label>
+        <label>Mot de passe</label>
         <md-icon class="fa fa-key fa-2x"></md-icon>
         <input ng-model="user.password" required name="password" type="password">
       </md-input-container>
       <div class="form-group has-error">
         <p class="help-block" ng-show="form.password.$error.required && form.$submitted">
-          A password is required
+          Un mot de passe est requis
         </p>
       </div>
     </md-content>
     <section layout="row" layout-sm="column" layout-align="center center">
-      <md-button class="md-primary" type="button" href="/signup">Sign Up</md-button>
-      <md-button class="md-raised md-primary" type="submit">Submit</md-button>
+      <a class="md-primary" type="button" href="/signup">S'enregistrer</a>
+      <md-button style="margin-left:10px" class="md-raised md-primary" type="submit">Connexion</md-button>
     </section>
   </form>
 </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .service('$match', function ($q, $http, Auth, $mdToast) {
+  .service('$match', function ($q, $http, Auth, $mdToast, $timeout) {
 	var service = {};
 
 	service.getMatchs = function() {
@@ -29,19 +29,22 @@ angular.module('liveTtApp')
       if(match.author) {
       	return $http.post('/api/matchs', match);
       } else {
-      	return $mdToast.show({
-          controller: 'ToastCtrl',
-          templateUrl: '/components/toast/add-match-error.html',
-          hideDelay: 3000,
-          position: 'bottom left'
-        });
+          $mdToast.show($mdToast.simple().content('Vous devez etre connecté pour créer un match').theme('danger-toast'));
       }
   	}
 
+    service.updateActive = function(matchId, active) {
+      return $http.put('/api/matchs/' + matchId + '/active', {active: active});
+    }
 
-  	service.addPlayer = function(player, teamId) {
+    service.addPlayer = function(player, teamId) {
       return $http.post('/api/teams/' + teamId + '/player', player);
-  	}
+    }
+
+    service.updateScore = function(gameId, score) {
+      return $http.put('/api/games/' + gameId + '/score', score);
+    }
+
 
 	return service;
   });

@@ -28,7 +28,7 @@ exports.index = function(req, res) {
 
 // Get a single match
 exports.show = function(req, res) {
-  Match.findById(req.params.id).populate('team.dom team.ext').populate('author','username').exec(function (err, data) {
+  Match.findById(req.params.id).sort([['created', 'ascending']]).populate('games team.dom team.ext').populate('author','username').exec(function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(404).send('Not Found'); }
     data.populate({path:'team.dom.players team.ext.players',model:'Player'}, function(err, match){
@@ -69,7 +69,6 @@ exports.update = function(req, res) {
   });
 };
 
-var Team = require('../team/team.model');
 
 
 
@@ -99,7 +98,6 @@ exports.addGame = function(req, res) {
           ext: ext,
           score: req.body.score
         }).save().then(function(game){
-          console.log(game);
           match.games = match.games || [];
           match.games.push(game);
           match.save(function (err) {
@@ -144,6 +142,21 @@ exports.destroy = function(req, res) {
     });
   });
 };
+
+
+// Updates an existing match in the DB.
+exports.updateActive = function(req, res) {
+  Match.findById(req.params.id, function (err, match) {
+    if (err) { return handleError(res, err); }
+    if(!match) { return res.status(404).send('Not Found'); }
+    match.active = req.body.active;
+    match.save(function (err) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(match);
+    });
+  });
+};
+
 
 function handleError(res, err) {
   return res.status(500).send(err);

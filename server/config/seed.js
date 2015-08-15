@@ -101,7 +101,7 @@ Player.find({}).remove(function() {
           date : Date(2015, 09, 14),
           division : 'N2',
           name : 'Match du maintien pour les Croix Roussiens',
-          body : 'Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l\'imprimerie depuis'
+          body : 'Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l\'imprimerie depuis',
           team: {
             dom: dom,
             ext: ext

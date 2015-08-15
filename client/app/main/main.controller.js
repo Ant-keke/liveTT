@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location) {
+  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location, Auth) {
 
     /** 
     * @State matchs 
@@ -43,6 +43,7 @@ angular.module('liveTtApp')
       $match.getMatch($stateParams.id).then(function(match) {
         $scope.match = match;
         $scope.match.games = $scope.match.games || [];
+        isAuthor();
         socket.syncUpdates('match', $scope.match);
       },function(err){
         $mdToast.show($mdToast.simple().content('Live introuvable!').theme('danger-toast'));
@@ -51,15 +52,23 @@ angular.module('liveTtApp')
     }
     
     $scope.deleteMatch = function(match) {
-      $http.delete('/api/matchs/' + match._id);
+      if($scope.isAuthor) {
+        $http.delete('/api/matchs/' + match._id).then(function(res){
+          $scope.match = {};
+          $location.path('/');
+          $mdToast.show($mdToast.simple().content('Match correctement supprimé').theme('success-toast'));
+        });
+      }
     };
-    $scope.updateGames = function() {
-      $http.put('/api/matchs/' + match._id, $scope.match).then(function(res){
-        $scope.lastUpdated = Date.now();
-      });
-    };
+
+    // $scope.updateGames = function() {
+    //   $http.put('/api/matchs/' + match._id, $scope.match).then(function(res){
+    //     $scope.lastUpdated = Date.now();
+    //   });
+    // };
     
     $scope.showAddGameModal = function(ev) {
+      if($scope.isAuthor){
         $mdDialog.show({
           controller: 'AddGameController',
           templateUrl: '/app/main/components/add-game.html',
@@ -70,7 +79,6 @@ angular.module('liveTtApp')
          }
         })
         .then(function(game) {
-          console.log(game);
           $http.post('/api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
             $scope.match.games.push(res.data);
             $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
@@ -79,64 +87,89 @@ angular.module('liveTtApp')
             $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
           });
         });
-    };
-    
-    $scope.showEditGameModal = function(ev, index) {
-        $mdDialog.show({
-          controller: 'EditGameController',
-          templateUrl: '/app/main/components/edit-game.html',
-          parent: angular.element(document.body),
-          targetEvent: ev,
-          locals: {
-           match: $scope.match,
-           index: index,
-         }
-        })
-        .then(function(match) {
-          $scope.match = match;
-          $mdToast.show($mdToast.simple().content('Match correctement édité!').theme('success-toast'));
-        }, function() {
-          $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
-        });
+      }
     };
     
     $scope.updateSet = function(matchId,teamType){
-      $scope.match.games[matchId].score[teamType] = (++$scope.match.games[matchId].score[teamType] % 4);
+      if($scope.isAuthor){
+        $scope.match.games[matchId].score[teamType] = (++$scope.match.games[matchId].score[teamType] % 4);
+        $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score);
+      }
     };
 
     $scope.updatePoints = function(matchId, setId, teamType){
-      var enabled = true;
-      var teamOpp = (teamType == 'dom') ? 'ext' : 'dom';
-      /* Check if precedent sets are finished */
-      for (var i = 0; i < setId; i++) {
-        if($scope.match.games[matchId].score.details[i].dom < 11 && $scope.match.games[matchId].score.details[i].ext < 11) {
-          enabled = false;
-          return;
+      if($scope.isAuthor) {
+        var enabled = true;
+        var teamOpp = (teamType == 'dom') ? 'ext' : 'dom';
+        /* Check if precedent sets are finished */
+        for (var i = 0; i < setId; i++) {
+          if($scope.match.games[matchId].score.details[i].dom < 11 && $scope.match.games[matchId].score.details[i].ext < 11) {
+            enabled = false;
+            return;
+          }
+        };
+        /* Check if last set */
+        if(setId < 4 ) {
+          if($scope.match.games[matchId].score.details[setId + 1].dom !== 0 || $scope.match.games[matchId].score.details[setId + 1].ext !== 0) {
+            enabled = false;
+          }
         }
-      };
-      /* Check if last set */
-      if(setId < 4 ) {
-        if($scope.match.games[matchId].score.details[setId + 1].dom !== 0 || $scope.match.games[matchId].score.details[setId + 1].ext !== 0) {
-          enabled = false;
+
+        if($scope.match.games[matchId].score.details[setId][teamOpp] >= 11 && $scope.match.games[matchId].score.details[setId][teamOpp] > $scope.match.games[matchId].score.details[setId][teamType] + 1) {
+          enabled =false;
+        }
+
+        /* Update points if enabled */
+        if (enabled) {
+          if($scope.match.games[matchId].score.details[setId][teamType] < 11 || ($scope.match.games[matchId].score.details[setId][teamType] - 1 <= $scope.match.games[matchId].score.details[setId][teamOpp]) ) {
+            $scope.match.games[matchId].score.details[setId][teamType]++;
+          } else {
+            $scope.match.games[matchId].score.details[setId][teamType] = 0;
+          }
+          $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score);
         }
       }
-      /* Update points if enabled */
-      if (enabled) {
-        if($scope.match.games[matchId].score.details[setId][teamType] < 11 || ($scope.match.games[matchId].score.details[setId][teamType] - 1 <= $scope.match.games[matchId].score.details[setId][teamOpp]) ) {
-          $scope.match.games[matchId].score.details[setId][teamType]++;
-        } else {
-          $scope.match.games[matchId].score.details[setId][teamType] = 0;
+    };
+
+    $scope.updateActive = function() {
+      if($scope.isAuthor) {
+        $match.updateActive($scope.match._id, $scope.match.active).then(function(res){
+          if($scope.match.active){
+            $mdToast.show($mdToast.simple().content('Ce live est maintenant actif. Il figure dans la liste des lives en cours.').theme('success-toast'));
+          } else {
+            $mdToast.show($mdToast.simple().content('Ce live est maintenant inactif.').theme('danger-toast'));
+          }
+        })
+      } 
+    }
+
+
+    $scope.deleteGame = function(index, gameId) {
+      if($scope.isAuthor) {
+        if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
+          $http.delete("/api/games/" + gameId).then(function(res){
+            $scope.match.games.splice(index,1)
+           $mdToast.show($mdToast.simple().content('Match correctement supprimé!').theme('success-toast'));
+          })
         }
       }
     };
 
 
-    $scope.deleteGame = function(index) {
-      if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
-        // $http. call here
-        $scope.match.games.splice($index,1)
+    $scope.deletePlayer = function(index, teamType, playerId) {
+      if($scope.isAuthor) {
+        if(confirm('Etes vous sur de vouloir supprimer ce joueur ?')) {
+          $http.delete("/api/matchs/" + $scope.match._id + "/player/" + playerId).then(function(res){
+            $scope.match.team[teamType].players.splice(index,1);
+           $mdToast.show($mdToast.simple().content('Joueur correctement supprimé!').theme('success-toast'));
+          })
+        }
       }
     };
+
+
+
+
     /** 
     * @State live.create 
     * @route /match/new 
@@ -163,15 +196,17 @@ angular.module('liveTtApp')
     * {string} teamType 'dom' or 'ext'
     */
     $scope.addPlayer = function(teamType, form) {
-      var teamId;
-      teamId = $scope.match.team[teamType]._id;
-      $match.addPlayer($scope.player[teamType], teamId).then(function(res){
-        //Return Player with his id and set res to players array
-        $mdToast.show($mdToast.simple().content('Joueur correctement ajouté!').theme('success-toast'));
-        form.$setPristine();
-        $scope.match.team[teamType].players.push($scope.player[teamType]);
-        $scope.player[teamType] = {};
-      })
+      if($scope.isAuthor) {
+        var teamId;
+        teamId = $scope.match.team[teamType]._id;
+        $match.addPlayer($scope.player[teamType], teamId).then(function(res){
+          //Return Player with his id and set res to players array
+          $mdToast.show($mdToast.simple().content('Joueur correctement ajouté!').theme('success-toast'));
+          form.$setPristine();
+          $scope.match.team[teamType].players.push($scope.player[teamType]);
+          $scope.player[teamType] = {};
+        })
+      }
     };
 
     /** 
@@ -179,15 +214,24 @@ angular.module('liveTtApp')
     * {string} teamType 'dom' or 'ext'
     */
     $scope.removePlayer = function(index, teamType, form) {
-      var teamId;
-      teamId = $scope.match.team[teamType]._id;
-      $match.removePlayer($scope.match.team[teamType].players[index]._id, teamId).then(function(res){
-        $mdToast.show($mdToast.simple().content('Joueur correctement Supprimé!').theme('danger-toast'));
-        form.$setPristine();
-        $scope.match.team.dom.players.push($scope.player[teamType]);
-        $scope.player[teamType] = {};
-      })
+      if($scope.isAuthor) {
+        var teamId;
+        teamId = $scope.match.team[teamType]._id;
+        $match.removePlayer($scope.match.team[teamType].players[index]._id, teamId).then(function(res){
+          $mdToast.show($mdToast.simple().content('Joueur correctement Supprimé!').theme('danger-toast'));
+          form.$setPristine();
+          $scope.match.team.dom.players.push($scope.player[teamType]);
+          $scope.player[teamType] = {};
+        })
+      }
     };
 
 
+    function isAuthor(){
+      if($scope.match.author._id == Auth.getCurrentUser()._id){
+        $scope.isAuthor = true;
+      } else {
+        $scope.isAuthor = false;
+      }
+    }
   });
