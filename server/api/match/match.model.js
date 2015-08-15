@@ -11,6 +11,7 @@ var MatchSchema = new Schema({
   updated: {type: Date, default: Date.now},
   date: Date,
   games: [{type: Schema.Types.ObjectId, ref:'Game'}],
+  comments: [{type: Schema.Types.ObjectId, ref:'Comment'}],
   team: {
     dom: {type: Schema.Types.ObjectId, ref:'Team'},
   	ext: {type: Schema.Types.ObjectId, ref:'Team'}

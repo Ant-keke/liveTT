@@ -41,6 +41,11 @@ angular.module('liveTtApp')
       return $http.post('/api/teams/' + teamId + '/player', player);
     }
 
+
+    service.addComment = function(body, authorId, matchId) {
+      return $http.post('api/comments', {body:body,author:authorId,match:matchId});
+    }
+
     service.updateScore = function(gameId, score) {
       return $http.put('/api/games/' + gameId + '/score', score);
     }

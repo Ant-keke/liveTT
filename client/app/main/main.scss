@@ -1,3 +1,6 @@
+$background-comment: #5C6BC0;
+
+
 .body {
     background: #fff;
     color: #60607B;
@@ -48,6 +51,41 @@ button, select, html, textarea, input {
     right: 10px;
 }
 
+.tt-comment-form {
+  color:white;
+  background-color: $background-comment;
+  position: fixed;
+  right:0px;
+  left:0px;
+  bottom:0px;
+  
+}
+
+.tt-comment-form md-input-container {
+  color:white;
+  background-color: $background-comment;
+}
+
+.tt-comment input{
+}
+
+.tt-comment  md-input-container .md-input {
+  color:white;
+  font-weight:500;
+  border-color: #fff;
+}
+
+.tt-comment label{
+  color:white;
+}
+
+.tt-comment {
+  position:relative;
+  right:5%;
+  left:5%;
+}
+
+
 .tt-score {
     position: relative;
 }
@@ -84,7 +122,8 @@ button, select, html, textarea, input {
   height: 35px; }
  .after-tabs-area > md-checkbox {
   margin-top: 26px;
-  margin-left: 0; }
+  margin-left: 0; 
+}
 
 
 md-toast.md-success-toast-theme {
@@ -169,3 +208,4 @@ md-content {
   font-size:1.1em;
   font-weight:600;
 }
+

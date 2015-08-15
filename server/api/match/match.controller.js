@@ -16,6 +16,7 @@ var User = require('../user/user.model');
 var Team = require('../team/team.model');
 var Game = require('../game/game.model');
 var Player = require('../player/player.model');
+var Comment = require('../comment/comment.model');
 var promise = require('promise');
 
 // Get list of matchs
@@ -28,13 +29,13 @@ exports.index = function(req, res) {
 
 // Get a single match
 exports.show = function(req, res) {
-  Match.findById(req.params.id).sort([['created', 'ascending']]).populate('games team.dom team.ext').populate('author','username').exec(function (err, data) {
+  Match.findById(req.params.id).sort([['created', 'ascending']]).populate('games team.dom team.ext comments').populate('author','username').exec(function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(404).send('Not Found'); }
-    data.populate({path:'team.dom.players team.ext.players',model:'Player'}, function(err, match){
+    data.populate({path:'team.dom.players team.ext.players',model:'Player'}).populate({path:'comments.author',model:'User'},function (err, match){
       if(err) { return handleError(res, err); }
       return res.json(match);
-    })
+    });
   });
 };
 
@@ -68,6 +69,7 @@ exports.update = function(req, res) {
     });
   });
 };
+
 
 
 

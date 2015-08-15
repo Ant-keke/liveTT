@@ -3,6 +3,8 @@
 angular.module('liveTtApp')
   .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location, Auth) {
 
+    $scope.isAuth = !!Auth.getCurrentUser()._id;
+
     /** 
     * @State matchs 
     * @route / 
@@ -206,6 +208,21 @@ angular.module('liveTtApp')
           $scope.match.team[teamType].players.push($scope.player[teamType]);
           $scope.player[teamType] = {};
         })
+      }
+    };
+
+    $scope.comment={};
+    /** 
+    * @AddComment
+    */
+    $scope.addComment = function() {
+      if($scope.isAuth) {
+        $match.addComment($scope.comment.body, Auth.getCurrentUser()._id, $scope.match._id).then(function(res){
+          $scope.comment= {};
+          $scope.match.comments.push(res.data);
+        })
+      } else {
+          $mdToast.show($mdToast.simple().content('Vous devez etre authentifié pour poster un commentaire.').theme('danger-toast'));
       }
     };
 
