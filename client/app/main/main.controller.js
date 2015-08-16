@@ -43,6 +43,10 @@ angular.module('liveTtApp')
     */
     if ($stateParams.id) {
       $match.getMatch($stateParams.id).then(function(match) {
+        for (var i = 0; i < match.comments.length; i++) {
+          match.comments[i].created = new Date(match.comments[i].created);
+          console.log( match.comments[i].created);
+        };
         $scope.match = match;
         $scope.match.games = $scope.match.games || [];
         isAuthor();

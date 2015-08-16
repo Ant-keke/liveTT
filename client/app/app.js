@@ -8,7 +8,8 @@ angular.module('liveTtApp', [
   'ui.router',
   'ui.bootstrap',
   'ngMaterial',
-  'ngMessages'
+  'ngMessages',
+  'angularMoment'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
@@ -83,4 +84,5 @@ angular.module('liveTtApp', [
     .accentPalette('cyan', {
       'default': '200' // use shade 200 for default, and keep all other shades the same
     });
-  });
+  })
+});
