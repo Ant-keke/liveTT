@@ -29,10 +29,13 @@ exports.create = function(req, res) {
     Match.findById(req.body.match).then(function(match){
       req.body.match = match;
       Comment.create(req.body, function(err, comment) {
-        comment.populate('author', function (err, comment) {
-          if(err) { return handleError(res, err); }
-          return res.status(201).json(comment);
-        });      
+        match.comments.push(comment);
+        match.save().then( function (err, match) {
+          comment.populate('author', function (err, comment) {
+            if(err) { return handleError(res, err); }
+            return res.status(201).json(comment);
+          });      
+        })
       });
     });
   })

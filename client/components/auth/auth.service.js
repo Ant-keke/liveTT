@@ -49,12 +49,8 @@ angular.module('liveTtApp')
       logout: function() {
         $cookieStore.remove('token');
         currentUser = {};
-        $mdToast.show({
-            controller: 'ToastCtrl',
-            templateUrl: '/components/toast/logout-success.html',
-            hideDelay: 3000,
-            position: 'bottom left'
-          });
+         $mdToast.show($mdToast.simple().content('Vous etes maintenant déconnecté').theme('danger-toast'));
+        
       },
 
       /**
