@@ -9,7 +9,8 @@
     </md-button>
   </h2>
 </md-toolbar>
-<section layout="row" flex>
+
+<section layout="row" flex id="main">
   <div ng-include="'components/navbar/sidebar.html'"></div>
   <!-- Filter Side Nav Right -->
   <md-sidenav class="md-sidenav-right md-whiteframe-z2 " md-component-id="filterMatchs" style="position:fixed;margin-top:64px">
@@ -51,25 +52,25 @@
   </md-sidenav>
 
 
-  <div class="container">
-    <md-content>
+    <md-content style="width:100%">
       <md-list>
-        <md-list-item class="md-2-line" ng-repeat="match in matchs | filter:search">
+        <md-list-item class="md-2-line" ng-repeat="match in matchs | filter:search" style="padding:0px">
           <div class="md-list-item-text">
-            <md-card>
-              <md-card-content>
-                <section class="row tt-score" style="margin-bottom:5px" layout="row" layout-sm="column" layout-align="center center">
-                  <h3>{{ match.team.dom.name }}  {{ match.team.dom.score }} - {{ match.team.ext.score }}
-                   {{ match.team.ext.name }}</h3>
-                </section>
-                <h4 class="text-center"> {{ match.name }} </h4>
-                <p> {{ match.body }} </p>
-              </md-card-content>
-              <div class="md-actions" layout="row" layout-align="end center">
-                <span class="label label-primary" style="margin-right:5px">Le {{match.date | date:'dd-MM-yyyy'}} par {{match.author.username}}</span>
-                <span class="label label-primary ">{{match.division}}</span>
-                <md-button href="/live/{{match._id}}">Suivre</md-button>
-              </div>
+            <md-card >
+              <md-button href="/live/{{match._id}}" style="margin:0px;padding:7px">
+                <md-card-content>
+                  <section class="row tt-score" style="margin-bottom:5px" layout="row" layout-sm="column" layout-align="center center">
+                    <h3>{{ match.team.dom.name }}  <strong>{{ match.team.dom.score }} - {{ match.team.ext.score }}</strong>
+                     {{ match.team.ext.name }}</h3>
+                  </section>
+                  <h4 class="text-center"> {{ match.name }} </h4>
+                </md-card-content>
+                <div class="md-actions" layout="row" layout-align="end center">
+                  <span class="label label-primary" style="margin-right:5px">Le {{match.date | date:'dd-MM-yyyy'}} par {{match.author.username}}</span>
+                  <span class="label label-primary ">{{match.division}}</span>
+                  <!-- <md-button href="/live/{{match._id}}">Suivre</md-button> -->
+                </div>
+              </md-button>
             </md-card>
           </div>
         </md-list-item>
@@ -78,5 +79,4 @@
     <md-button class="md-fab md-primary tt-fab-button" href="/match/new" aria-label="New Match">
       <i class="fa fa-plus fa-lg"></i> 
     </md-button>
-  </div>
 </section>

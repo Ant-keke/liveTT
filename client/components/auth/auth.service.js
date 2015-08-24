@@ -29,12 +29,7 @@ angular.module('liveTtApp')
           currentUser = User.get();
           deferred.resolve(data);
           /** Success notification */
-          $mdToast.show({
-            controller: 'ToastCtrl',
-            templateUrl: '/components/toast/login-success.html',
-            hideDelay: 3000,
-            position: 'bottom left'
-          });
+         $mdToast.show($mdToast.simple().content('Vous etes maintenant connecté').theme('success-toast'));
           return cb();
         }).
         error(function(err) {

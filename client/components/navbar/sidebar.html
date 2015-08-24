@@ -1,12 +1,18 @@
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sideNav" style="position:fixed;margin-top:64px;z-index:101">
-  <md-toolbar class="md-theme-indigo">
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sideNav" style="position:fixed;z-index:1000">
+  <!-- <md-toolbar class="md-theme-indigo">
     <h1 class="md-toolbar-tools">Menu</h1>
-  </md-toolbar>
-  <md-content layout-padding ng-controller="NavbarCtrl">
-    <md-list>
+  </md-toolbar> -->
+  <md-content layout-padding ng-controller="NavbarCtrl" class="sidebar-content">
+    <md-list class="sidebar-item">
       <md-list-item ng-click="navigateTo('main')">
         <md-icon class="fa fa-video-camera"></md-icon>
         <p>Matchs en cours</p>
+      </md-list-item>
+    </md-list>
+    <md-list class="sidebar-item">
+      <md-list-item ng-click="navigateTo('login')" ng-class="selectedNav('ogin')">
+        <md-icon class="fa fa-user"></md-icon>
+        <p>Connexion</p>
       </md-list-item>
     </md-list>
   </md-content>

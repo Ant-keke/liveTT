@@ -1,4 +1,4 @@
-                                                                                                                                  'use strict';
+'use strict';
 
 angular.module('liveTtApp', [
   'ngCookies',
@@ -85,4 +85,3 @@ angular.module('liveTtApp', [
       'default': '200' // use shade 200 for default, and keep all other shades the same
     });
   })
-});

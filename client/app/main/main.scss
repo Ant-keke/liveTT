@@ -1,4 +1,4 @@
-$background-comment: #5C6BC0;
+$background-comment: #E5E6EC;
 
 
 .body {
@@ -52,7 +52,6 @@ button, select, html, textarea, input {
 }
 
 .tt-comment-form {
-  color:white;
   background-color: $background-comment;
   position: fixed;
   right:0px;
@@ -63,7 +62,6 @@ button, select, html, textarea, input {
 }
 
 .tt-comment-form md-input-container {
-  color:white;
   background-color: $background-comment;
 }
 
@@ -71,13 +69,10 @@ button, select, html, textarea, input {
 }
 
 .tt-comment  md-input-container .md-input {
-  color:white;
   font-weight:500;
-  border-color: #fff;
 }
 
 .tt-comment label{
-  color:white;
 }
 
 .tt-comment {
@@ -102,7 +97,7 @@ button, select, html, textarea, input {
 }
 
  md-tab-content {
-  height: 100%;
+  bottom:0px;
   display: -ms-flexbox;
   display: -webkit-box;
   display: -moz-box;
@@ -160,7 +155,8 @@ md-content {
 .card-player {
     border-color: rgb(0, 131, 143);
     color: rgb(255, 255, 255);
-    background-image: url('../assets/images/waves.png');
+    background-image: linear-gradient(to bottom,#5C6BC0 0,#3949AB 100%);
+    /* background-image: url('../assets/images/waves.png'); */
     font-weight: 800;
     font-size:1em;
     margin-top:5px;
@@ -210,3 +206,20 @@ md-content {
   font-weight:600;
 }
 
+.sidebar-item {
+  padding:0px;
+  margin:0px;
+}
+
+.sidebar-content {
+  padding:0px;
+  margin:30px 0px 0px 0px;
+}
+
+#main md-list-item.md-2-line .md-list-item-text, md-list-item.md-2-line > .md-no-style .md-list-item-text {
+  padding:0px
+}
+
+.tt-live-container md-tabs {
+  height:100%;
+}

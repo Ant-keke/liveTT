@@ -7,6 +7,8 @@ var GameSchema = new Schema({
   dom: [{type: Schema.Types.ObjectId, ref:'Player'}],
   ext: [{type: Schema.Types.ObjectId, ref:'Player'}],
   score: {},
+  created: {type: Date, default: Date.now},
+  author: {type: Schema.Types.ObjectId, ref: 'User'},
   winner: String
 });
 

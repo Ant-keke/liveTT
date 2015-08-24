@@ -1,5 +1,8 @@
 <div class="container">
   <div ng-include="'components/navbar/sidebar.html'"></div>
+  <div class="col-sm-12 text-center">
+    <h1>Connexion</h1>
+  </div>
   <form class="form tt-login-form" name="form" ng-submit="form.$valid && login(form)" novalidate>
     <div class="form-group has-error">
       <p class="help-block">{{ errors.other }}</p>
@@ -32,7 +35,7 @@
         </p>
       </div>
     </md-content>
-    <section layout="row" layout-sm="column" layout-align="center center">
+    <section layout="row" layout-sm="row" layout-align="center center" style="margin-top:15px">
       <a class="md-primary" type="button" href="/signup">S'enregistrer</a>
       <md-button style="margin-left:10px" class="md-raised md-primary" type="submit">Connexion</md-button>
     </section>

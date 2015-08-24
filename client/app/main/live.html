@@ -9,6 +9,7 @@
 <section class="tt-live-container"  style="height:100%">
   <md-content  style="height:100%">
     <md-tabs class="md-primary md-hue-4" md-selected="tabs.selectedIndex" md-align-tabs="{{tabs.bottom ? 'bottom' : 'top'}}"  style="height:100%">
+      
       <md-tab id="tab1" style="height:100%">
         <md-tab-label><md-icon class="fa fa-history" style="color:#FFF" ></md-icon></md-tab-label>
         <md-tab-body  md-swipe-right="tabs.selectedIndex++;" style="height:100%">
@@ -18,7 +19,7 @@
           <div layout-align="center">
             <h3 class="md-title" > {{ match.name | uppercase }} </h3>
             <p > {{ match.body }} </p>
-            <div ng-repeat="(matchIndex, game) in match.games" class="col-md-6">
+            <div ng-repeat="(matchIndex, game) in match.games">
               <md-card>
                 <md-card-content class="card-score">
                   <div layout="row" style="font-size: 1.3em;line-height: 1.25rem;padding-top:15px">
@@ -62,50 +63,38 @@
               </md-card>
             </div>
       		</div>
+          <md-button class="md-fab md-primary tt-fab-button" ng-click="showAddGameModal($event)" aria-label="New Match" ng-if="isAuthor">
+            <i class="fa fa-plus fa-lg"></i> 
+          </md-button>
         </md-tab-body>
       </md-tab>
-      <md-tab id="tab2" style="height:100%">
-        <md-tab-label><md-icon class="fa fa-comment" style="color:#FFF;" ></md-icon> <span>{{ match.comments.length}} Commentaires</md-tab-label>
-        <md-tab-body style="height:100%">
-          <md-content  latout="column" flex  style="height:100%">
-            <md-list style="position:relative;bottom:80px">
-              <md-list-item class="md-3-line" ng-repeat="comment in match.comments">
-                <div class="md-list-item-text">
-                  <h3>{{comment.author.username}}</h3>
-                  <p flex="80">{{comment.body}}</p>
-                  <p class="pull-right" am-time-ago="comment.created" style="opacity:0.7;font-size:0.9em;"></p>
-                </div>
-                <md-divider inset ng-if="!$last"></md-divider>
-              </md-list-item>
-            </md-list>
-          </md-content>
-        </md-tab-body>
-      </md-tab>
-      <md-tab id="tab3">
+
+      <!-- Equipes -->
+      <md-tab id="tab2" style="height:100%;margin-bottom:82px">
         <md-tab-label><md-icon class="fa fa-group" style="color:#FFF;position:relative;top:3px" ></md-icon><span>Equipes</span></md-tab-label>
         <md-tab-body>
-          <section >
+          <section>
             <h4 class="text-center">{{match.team.dom.name | uppercase}}</h4>
             <form name="addDomPlayer" novalidate ng-submit="addDomPlayer.$valid && addPlayer('dom', addDomPlayer)" ng-if="isAuthor">
               <div layout layout-sm="row" style="margin-left:4%">
                 <md-input-container style="width:28%">
                   <label>Nom</label>
                   <input ng-model="player.dom.lastname" name="pdomlastname" required>
-                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomlastname.$error">
+                  <div  style="display:none" ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomlastname.$error">
                     <div ng-message="required">Nom du joueur requis.</div>
                   </div>
                 </md-input-container>
                 <md-input-container style="width:28%">
                   <label>Prénom</label>
                   <input ng-model="player.dom.firstname" name="pdomfirstname" required>
-                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomfirstname.$error">
+                  <div style="display:none" ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdomfirstname.$error">
                     <div ng-message="required">Prénom du joueur requis.</div>
                   </div>
                 </md-input-container>
                 <md-input-container style="width:20%">
                   <label>Points</label>
                   <input type="number" ng-model="player.dom.points" name="pdompoints" required>
-                  <div ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdompoints.$error">
+                  <div style="display:none" ng-show="addDomPlayer.$submitted" ng-messages="addDomPlayer.pdompoints.$error">
                     <div ng-message="required">Nombre de points du joueur requis.</div>
                   </div>
                 </md-input-container>
@@ -134,21 +123,21 @@
                 <md-input-container style="width:28%">
                   <label>Nom</label>
                   <input ng-model="player.ext.lastname" name="pextlastname" required>
-                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextlastname.$error">
+                  <div style="display:none" ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextlastname.$error">
                     <div ng-message="require  d">Nom du joueur requis.</div>
                   </div>
                 </md-input-container>
                 <md-input-container style="width:28%">
                   <label>Prénom</label>
                   <input ng-model="player.ext.firstname" name="pextfirstname" required>
-                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextfirstname.$error">
+                  <div style="display:none" ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextfirstname.$error">
                     <div ng-message="required">Prénom du joueur requis.</div>
                   </div>
                 </md-input-container>
                 <md-input-container style="width:20%">
                   <label>Points</label>
                   <input type="number" ng-model="player.ext.points" name="pextpoints" required>
-                  <div ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextpoints.$error">
+                  <div style="display:none" ng-show="addExtPlayers.$submitted" ng-messages="addExtPlayers.pextpoints.$error">
                     <div ng-message="required">Nombre de points du joueur requis.</div>
                   </div>
                 </md-input-container>
@@ -170,25 +159,45 @@
               </md-list-item>
             </md-list>
           </section>
+
+          <!-- Add a comment -->  
+          <div class="tt-comment-form"  ng-show="tabs.selectedIndex == 2">
+            <section class="tt-comment" layout="row" layout-align="center" layout-wrap >
+              <md-content flex="80">
+              <md-input-container flex>
+                <label>Votre message...</label>
+                <input ng-model="comment.body" columns="1" md-maxlength="150" ng-keyup="$event.keyCode == 13 ? addComment() : null"></input>
+              </md-input-container>
+              </md-content>
+              <md-button ng-click="addComment()" flex="10" class="md-icon-button md-primary" aria-label="send-comment" style="top:15px;">
+                <md-icon class="fa fa-send"></md-icon>
+              </md-button>
+            </section>
+          </div>
+        </md-tab-body>
+      </md-tab>
+
+      <!-- Comments -->
+      <md-tab id="tab3">
+        <md-tab-label><md-icon class="fa fa-comment" style="color:#FFF;" ></md-icon> <span>{{ match.comments.length}} Commentaires</md-tab-label>
+        <md-tab-body style="height:100%">
+          <md-content  latout="column" flex  style="height:100%">
+            <md-list style="position:relative;bottom:80px">
+              <md-list-item class="md-3-line" ng-repeat="comment in match.comments">
+                <div class="md-list-item-text">
+                  <h3>
+                    {{comment.author.username}}
+                    <small class="pull-right" am-time-ago="comment.created" style="opacity:0.7;font-size:0.9em;"></small>
+                  </h3>
+                  <p flex="80">{{comment.body}}</p>
+                </div>
+                <md-divider inset ng-if="!$last"></md-divider>
+              </md-list-item>
+            </md-list>
+          </md-content>
         </md-tab-body>
       </md-tab>
     </md-tabs>
   </md-content>
-  <div class="tt-comment-form"  ng-show="tabs.selectedIndex == 1">
-    <section class="tt-comment" layout="row" layout-align="center" layout-wrap >
-      <md-content flex="80">
-      <md-input-container flex>
-        <label>New message</label>
-        <input ng-model="comment.body" columns="1" md-maxlength="150" ng-keyup="$event.keyCode == 13 ? addComment() : null"></input>
-      </md-input-container>
-      </md-content>
-      <md-button ng-click="addComment()" flex="10" class="md-icon-button md-primary" aria-label="send-comment" style="top:15px;">
-        <md-icon class="fa fa-send" style="color:white"></md-icon>
-      </md-button>
-    </section>
-  </div>
-  <md-button ng-show="tabs.selectedIndex == 0" class="md-fab md-primary tt-fab-button" ng-click="showAddGameModal($event)" aria-label="New Match" ng-if="isAuthor">
-    <i class="fa fa-plus fa-lg"></i> 
-  </md-button>
 </section>
 
