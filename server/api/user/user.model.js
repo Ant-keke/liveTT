@@ -3,9 +3,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+var authTypes = ['twitter', 'facebook', 'google'];
 
 var UserSchema = new Schema({
   username: {type: String, required: true},
+  email: {type: String, required: false},
+  photo: {type: String, required: false},
   role: {
     type: String,
     default: 'user'
@@ -13,7 +16,10 @@ var UserSchema = new Schema({
   matchs: [{type: Schema.Types.ObjectId, ref:'Match'}],
   hashedPassword: String,
   provider: String,
-  salt: String
+  salt: String,
+  facebook: {},
+  twitter: {},
+  google: {}
 });
 
 /**
@@ -93,7 +99,7 @@ var validatePresenceOf = function(value) {
 UserSchema
   .pre('save', function(next) {
     if (!this.isNew) return next();
-    if (!validatePresenceOf(this.hashedPassword))
+    if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
       next(new Error('Invalid password'));
     else
       next();

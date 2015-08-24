@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location) {
+  .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
     $scope.user = {};
     $scope.errors = {};
 
@@ -30,5 +30,7 @@ angular.module('liveTtApp')
         });
       }
     };
-
+    $scope.loginOauth = function(provider) {
+      $window.location.href = '/auth/' + provider;
+    };
   });
