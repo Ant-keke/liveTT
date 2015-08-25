@@ -19,7 +19,7 @@
           <div layout-align="center">
             <h3 class="md-title" > {{ match.name | uppercase }} </h3>
             <p > {{ match.body }} </p>
-            <div ng-repeat="(matchIndex, game) in match.games">
+            <div ng-repeat="(gameIndex, game) in match.games">
               <md-card>
                 <md-card-content class="card-score">
                   <div layout="row" style="font-size: 1.3em;line-height: 1.25rem;padding-top:15px">
@@ -29,15 +29,15 @@
                         <div ng-if="player._id">{{player.firstname | uppercase}} {{player.lastname | uppercase}}<p>({{ player.points }})</p></div> 
                       </div>
                     </div>
-                    <md-button flex="5" ng-click="updateSet(matchIndex, 'dom')" class="tt-score-sets md-icon-button" aria-label="sets" >
+                    <md-button flex="5" ng-click="updateSet(gameIndex, 'dom')" class="tt-score-sets md-icon-button" aria-label="sets" >
                         {{game.score.dom}}
                     </md-button>
                     <div flex="40" layout="row">
-                      <md-button flex="15" ng-repeat="(setId, points) in game.score.details" ng-click="updatePoints(matchIndex, setId,'dom')" class=" md-icon-button tt-score-points" aria-label="points" >
+                      <md-button flex="15" ng-repeat="(setId, points) in game.score.details" ng-click="updatePoints(gameIndex, setId,'dom')" class=" md-icon-button tt-score-points" aria-label="points" >
                         {{points.dom}}
                       </md-button>
                     </div>
-                    <md-button style="position:relative;top:-25px;" class="md-icon-button pull-right" ng-click="deleteGame(index, game._id)" aria-label="delete-game" ng-if="isAuthor">
+                    <md-button style="position:relative;top:-25px;" class="md-icon-button pull-right" ng-click="deleteGame(gameIndex, game._id)" aria-label="delete-game" ng-if="isAuthor">
                       <md-icon class="fa fa-remove" style="color:white"></md-icon>
                     </md-button>
                   </div>
@@ -49,12 +49,12 @@
                         <div ng-if="player._id">{{player.firstname | uppercase}} {{player.lastname | uppercase}}<p>({{ player.points }})</p></div> 
                       </div>
                     </div>
-                    <md-button flex="5" ng-click="updateSet(matchIndex, 'ext')" class="tt-score-sets md-icon-button" aria-label="sets" >
+                    <md-button flex="5" ng-click="updateSet(gameIndex, 'ext')" class="tt-score-sets md-icon-button" aria-label="sets" >
                         {{game.score.ext}}
                     </md-button>
 
                     <div flex="40" layout="row">
-                      <md-button flex="15" ng-repeat="(setId, points) in game.score.details" ng-click="updatePoints(matchIndex, setId,'ext')" class=" md-icon-button tt-score-points" aria-label="points" >
+                      <md-button flex="15" ng-repeat="(setId, points) in game.score.details" ng-click="updatePoints(gameIndex, setId,'ext')" class=" md-icon-button tt-score-points" aria-label="points" >
                         {{points.ext}}
                       </md-button>
                     </div>
@@ -101,7 +101,7 @@
               </div>
             </form>
             <md-list>
-              <md-list-item class="md-2-line " ng-repeat="player in match.team.dom.players" layout="row"
+              <md-list-item class="md-2-line " ng-repeat="(index, player) in match.team.dom.players" layout="row"
                   layout-wrap>
                 <div class="md-item-text md-whiteframe-z1 card-player" flex>
                   <md-button class="md-icon-button pull-right" ng-click="deletePlayer(index, 'dom',player._id)" aria-label="delete-player" ng-if="isAuthor" >
@@ -144,7 +144,7 @@
               </div>
             </form>
             <md-list>
-              <md-list-item class="md-2-line " ng-repeat="player in match.team.ext.players" layout="row"
+              <md-list-item class="md-2-line " ng-repeat="(index, player) in match.team.ext.players" layout="row"
                   layout-wrap>
                 <div class="md-item-text md-whiteframe-z1  card-player" flex>
                   <md-button class="md-icon-button pull-right" ng-click="deletePlayer(index, 'ext',player._id)" aria-label="delete-player" ng-if="isAuthor" >

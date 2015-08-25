@@ -29,6 +29,7 @@ exports.create = function(req, res) {
   });
 };
 
+
 // Add a new player in team and in DB.
 exports.addPlayer = function(req, res) {
   var player = new Player(req.body);
@@ -43,17 +44,22 @@ exports.addPlayer = function(req, res) {
 };
 
 // Remove player from team and DB.
-exports.removePlayer = function(req, res) {
+exports.deletePlayer = function(req, res) {
   Team.findById(req.params.id, function (err, team) {
     var index = team.players.indexOf(req.params.pid);
-    // Player.findById(req.params.pid, function(err){
-      
-    // })
-    team.players.splice(index,1);
-    team.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.status(200).json(player);
-    });
+    if(index != -1) {
+      team.players.splice(index,1);
+      team.save(function (err) {
+        Player.findById(req.params.pid, function (err, player){
+          player.remove(function (err) {
+            if (err) { return handleError(res, err); }
+            return res.status(201).json('Player deleted successfully');
+          });
+        })
+      });
+    } else {
+      return res.status(404).send('Joueur non trouvé dans l\'équipe');
+    }
   });
 };
 

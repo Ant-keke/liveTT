@@ -49,9 +49,15 @@ angular.module('liveTtApp')
           match.comments[i].created = new Date(match.comments[i].created);
         };
         $scope.match = match;
+        socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
+            $scope.match = item;
+        });
+       $scope.$on('$destroy', function () {
+          socket.unsyncUpdates($scope.match._id);
+        });
+
         $scope.match.games = $scope.match.games || [];
         isAuthor();
-        socket.syncUpdates('match', $scope.match);
       },function(err){
         $mdToast.show($mdToast.simple().content('Live introuvable!').theme('danger-toast'));
         $location.path('/live');
@@ -68,12 +74,6 @@ angular.module('liveTtApp')
       }
     };
 
-    // $scope.updateGames = function() {
-    //   $http.put('/api/matchs/' + match._id, $scope.match).then(function(res){
-    //     $scope.lastUpdated = Date.now();
-    //   });
-    // };
-    
     $scope.showAddGameModal = function(ev) {
       if($scope.isAuthor){
         $mdDialog.show({
@@ -166,8 +166,8 @@ angular.module('liveTtApp')
     $scope.deletePlayer = function(index, teamType, playerId) {
       if($scope.isAuthor) {
         if(confirm('Etes vous sur de vouloir supprimer ce joueur ?')) {
-          $http.delete("/api/matchs/" + $scope.match._id + "/player/" + playerId).then(function(res){
-            $scope.match.team[teamType].players.splice(index,1);
+          $http.delete("/api/teams/" + $scope.match.team[teamType]._id + "/player/" + playerId).then(function(res){
+           $scope.match.team[teamType].players.splice(index,1);
            $mdToast.show($mdToast.simple().content('Joueur correctement supprimé!').theme('success-toast'));
           })
         }
@@ -210,7 +210,7 @@ angular.module('liveTtApp')
           //Return Player with his id and set res to players array
           $mdToast.show($mdToast.simple().content('Joueur correctement ajouté!').theme('success-toast'));
           form.$setPristine();
-          $scope.match.team[teamType].players.push($scope.player[teamType]);
+          $scope.match.team[teamType].players.push(res.data);
           $scope.player[teamType] = {};
         })
       }
@@ -256,4 +256,6 @@ angular.module('liveTtApp')
         $scope.isAuthor = false;
       }
     }
+
+
   });

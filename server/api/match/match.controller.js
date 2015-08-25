@@ -21,7 +21,7 @@ var promise = require('promise');
 
 // Get list of matchs
 exports.index = function(req, res) {
-  Match.find({}).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
+  Match.find({}).sort([['created', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(matchs);
   });
@@ -29,7 +29,7 @@ exports.index = function(req, res) {
 
 // Get a single match
 exports.show = function(req, res) {
-  Match.findById(req.params.id).sort([['created', 'ascending']]).populate('games team.dom team.ext comments').populate('author','username').exec(function (err, data) {
+  Match.findById(req.params.id).populate('games team.dom team.ext comments').populate('author','username').exec(function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(404).send('Not Found'); }
     data.populate({path:'team.dom.players team.ext.players',model:'Player'}).populate({path:'comments.author',model:'User'},function (err, match){
@@ -142,6 +142,30 @@ exports.destroy = function(req, res) {
       if(err) { return handleError(res, err); }
       return res.status(204).send('No Content');
     });
+  });
+};
+
+
+// Deletes a match from the DB.
+exports.deletePlayer = function(req, res) {
+  Match.findById(req.params.id, function (err, match) {
+    if(err) { return handleError(res, err); }
+    if(!match) { return res.status(404).send('Not Found'); }
+    var domId = match.team.dom.players.indexOf(req.params.pid);
+    var extId = match.team.ext.players.indexOf(req.params.pid);
+    if(domId != -1) {
+      match.team.dom.players.splice(domId,1);
+    } else if(extId != -1) {
+      match.team.ext.players.splice(extId,1);
+    }
+    match.save().then(function() {
+      Player.findById(req.body.pid, function (err, player) {
+        player.remove(function(err) {
+          if(err) { return handleError(res, err); }
+          return res.status(204).send('No Content');
+        });
+      });
+    })
   });
 };
 
