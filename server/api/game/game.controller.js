@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Game = require('./game.model');
+var Match = require('../match/match.model');
 
 // Get list of games
 exports.index = function(req, res) {
@@ -49,6 +50,12 @@ exports.updateScore = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!game) { return res.status(404).send('Not Found'); }
     game.score = req.body;
+
+    /* Asynchronously get and persist match to trigger socket */
+    Match.findById(game.match, function (err, match) {
+      match.save()
+    });
+
     game.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.status(200).json(game);

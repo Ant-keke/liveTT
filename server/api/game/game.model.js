@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var GameSchema = new Schema({
   dom: [{type: Schema.Types.ObjectId, ref:'Player'}],
   ext: [{type: Schema.Types.ObjectId, ref:'Player'}],
+  match: {type: Schema.Types.ObjectId, ref:'Match'},
   score: {},
   created: {type: Date, default: Date.now},
   author: {type: Schema.Types.ObjectId, ref: 'User'},

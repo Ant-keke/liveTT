@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Team = require('./team.model');
 var Player = require('../player/player.model');
+var Match = require('../match/match.model');
 
 // Get list of teams
 exports.index = function(req, res) {
@@ -38,6 +39,10 @@ exports.addPlayer = function(req, res) {
     team.players.push(player);
     team.save(function (err) {
       if (err) { return handleError(res, err); }
+      /* Asynchronously get and persist match to trigger socket */
+      Match.findById(team.match, function (err, match) {
+        match.save()
+      });
       return res.status(200).json(player);
     });
   });
@@ -52,6 +57,11 @@ exports.deletePlayer = function(req, res) {
       team.save(function (err) {
         Player.findById(req.params.pid, function (err, player){
           player.remove(function (err) {
+
+            /* Asynchronously get and persist match to trigger socket */
+            Match.findById(team.match, function (err, match) {
+              match.save()
+            });
             if (err) { return handleError(res, err); }
             return res.status(201).json('Player deleted successfully');
           });

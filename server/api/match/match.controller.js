@@ -98,6 +98,7 @@ exports.addGame = function(req, res) {
         Game({
           dom: dom,
           ext: ext,
+          match: match,
           score: req.body.score
         }).save().then(function(game){
           match.games = match.games || [];
@@ -109,7 +110,6 @@ exports.addGame = function(req, res) {
             });
           })
         },function(err){
-          console.log(err);
           return res.status(400).send('Game not added');
         });
       })

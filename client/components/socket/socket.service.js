@@ -48,7 +48,6 @@ angular.module('liveTtApp')
           // } else {
           //   array.push(item);
           // }
-          console.log(item);
           cb(event, item);
         });
 

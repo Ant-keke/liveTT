@@ -49,13 +49,7 @@ angular.module('liveTtApp')
           match.comments[i].created = new Date(match.comments[i].created);
         };
         $scope.match = match;
-        socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
-            $scope.match = item;
-        });
-       $scope.$on('$destroy', function () {
-          socket.unsyncUpdates($scope.match._id);
-        });
-
+        createSocket();
         $scope.match.games = $scope.match.games || [];
         isAuthor();
       },function(err){
@@ -78,7 +72,7 @@ angular.module('liveTtApp')
       if($scope.isAuthor){
         $mdDialog.show({
           controller: 'AddGameController',
-          templateUrl: '/app/main/components/add-game.html',
+          templateUrl: 'app/main/components/add-game.html',
           parent: angular.element(document.body),
           targetEvent: ev,
           locals: {
@@ -86,6 +80,7 @@ angular.module('liveTtApp')
          }
         })
         .then(function(game) {
+          game.match = $scope.match;
           $http.post('/api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
             $scope.match.games.push(res.data);
             $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
@@ -256,6 +251,18 @@ angular.module('liveTtApp')
         $scope.isAuthor = false;
       }
     }
+
+
+    /* Socket */
+    function createSocket(){
+      socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
+        console.log('upda')
+          $scope.match = item;
+      });
+     $scope.$on('$destroy', function () {
+        socket.unsyncUpdates($scope.match._id);
+      });
+   };
 
 
   });
