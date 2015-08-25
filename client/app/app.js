@@ -9,7 +9,8 @@ angular.module('liveTtApp', [
   'ui.bootstrap',
   'ngMaterial',
   'ngMessages',
-  'angularMoment'
+  'angularMoment',
+  'angular-tour'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');

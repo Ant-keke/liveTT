@@ -4,9 +4,9 @@
   </md-toolbar>
   <md-content layout-padding ng-controller="NavbarCtrl" class="sidebar-content">
     <md-list >
-      <md-list-item ng-click="navigateTo('main')">
-      <img ng-if="!getCurrentUser().photo" ng-src="assets/images/default_user.png" class="md-avatar" alt="{{getCurrentUser().username}}" />
-      <img ng-if="getCurrentUser().photo" ng-src="{{getCurrentUser().photo}}" class="md-avatar" alt="{{getCurrentUser().username}}" />
+      <md-list-item ng-click="navigateTo('main')" ng-if="isLoggedIn()">
+        <img ng-if="!getCurrentUser().photo" ng-src="assets/images/default_user.png" class="md-avatar" alt="{{getCurrentUser().username}}" />
+        <img ng-if="getCurrentUser().photo" ng-src="{{getCurrentUser().photo}}" class="md-avatar" alt="{{getCurrentUser().username}}" />
         <p class="md-title md-primary">{{getCurrentUser().username}}</p>
       </md-list-item>
     </md-list>

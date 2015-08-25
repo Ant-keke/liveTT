@@ -5,6 +5,8 @@ angular.module('liveTtApp')
 
     $scope.isAuth = !!Auth.getCurrentUser()._id;
 
+    // load cookie, or start new tour
+    $scope.currentStep =  0;
     /** 
     * @State matchs 
     * @route / 
