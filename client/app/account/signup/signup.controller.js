@@ -10,8 +10,7 @@ angular.module('liveTtApp')
 
       if(form.$valid) {
         Auth.createUser({
-          name: $scope.user.name,
-          email: $scope.user.email,
+          username: $scope.user.username,
           password: $scope.user.password
         })
         .then( function() {
