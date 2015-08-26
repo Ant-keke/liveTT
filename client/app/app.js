@@ -52,7 +52,7 @@ angular.module('liveTtApp', [
           'responseError': function(rejection) {
               // do something on error
               if(rejection.status === 404){
-                  $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
+                  $mdToast.show($mdToast.simple().content('Page non trouvée!').theme('danger-toast'));
                   $location.href = '/';                    
               }
               return $q.reject(rejection);

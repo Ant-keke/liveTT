@@ -8,9 +8,10 @@ angular.module('liveTtApp')
   		$location.path('/');
   	}
 
-	$match.getFollowed(Auth.getCurrentUser()._id).then(res) {
-		$scope.matchs = res;
-	}
+	$match.followedMatch(Auth.getCurrentUser()._id).then(function(res) {
+		$scope.matchs = res.data;
+	});
+
   	$scope.unFollowMatch = function(matchId) {
       $match.unFollowMatch(matchId, Auth.getCurrentUser()._id).then(function(res){
         $mdToast.show($mdToast.simple().content('Match correctement supprimé de vos favoris').theme('success-toast'));

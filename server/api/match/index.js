@@ -17,7 +17,7 @@ router.post('/:id/games', controller.addGame);
 
 router.put('/:id/follow', controller.followMatch);
 router.put('/:id/unfollow', controller.unfollowMatch);
-router.put('/followed/:userId', controller.followedMatch);
+router.put('/followed', controller.followedMatch);
 
 
 module.exports = router;

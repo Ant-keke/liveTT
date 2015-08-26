@@ -1,6 +1,6 @@
 <md-toolbar class="md-primary" md-scroll-shrink style="margin-top:64px;z-index:100">
   <h2 class="md-toolbar-tools">
-    <span flex>Matchs en cours</span>
+    <span flex>Rencontres en live</span>
     <md-button class="md-icon-button" aria-label="Refresh" ng-click="refreshMatchs()">
         <i class="fa fa-refresh"></i>
     </md-button>
@@ -52,33 +52,10 @@
   </md-sidenav>
 
 
-    <md-content style="width:100%">
-      <md-list>
-        <md-list-item class="md-2-line" ng-repeat="match in matchs | filter:search" style="padding:0px">
-          <div class="md-list-item-text">
-            <md-card >
-              <md-button href="/live/{{match._id}}" style="margin:0px;padding:7px">
-                <md-card-content>
-                  <section class="row tt-score" style="margin-bottom:5px" layout="row" layout-sm="column" layout-align="center center">
-                    <h3>{{ match.team.dom.name }}  <strong>{{ match.team.dom.score }} - {{ match.team.ext.score }}</strong>
-                     {{ match.team.ext.name }}</h3>
-                  </section>
-                  <h4 class="text-center"> {{ match.name }} </h4>
-                </md-card-content>
-                <div class="md-actions" layout="row" layout-align="end center">
-                  <span class="label label-primary" style="margin-right:5px">Le {{match.date | date:'dd-MM-yyyy'}} par {{match.author.username}}</span>
-                  <span class="label label-primary ">{{match.division}}</span>
-                  <!-- <md-button href="/live/{{match._id}}">Suivre</md-button> -->
-                </div>
-              </md-button>
-            </md-card>
-          </div>
-        </md-list-item>
-      </md-list>
-    </md-content>
-      <md-button class="tt-fab-button md-fab md-primary" href="/match/new" aria-label="New Match">
-        <i class="fa fa-plus fa-lg"></i> 
-      </md-button>
+  <div style="width:100%" ng-include="'components/match/match-list.html'"></div>
+  <md-button class="tt-fab-button md-fab md-primary" href="/match/new" aria-label="New Match">
+    <i class="fa fa-plus fa-lg"></i> 
+  </md-button>
     <!-- <tour step="currentStep" class="tt-fab-button">
       <div tourtip="Commencer un live" >
     </tour> -->

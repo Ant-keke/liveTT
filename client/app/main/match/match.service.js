@@ -59,7 +59,7 @@ angular.module('liveTtApp')
     }
 
     service.followedMatch = function(userId) {
-      return $http.put('api/matchs/followed/', {userId:userId});
+      return $http.get('api/matchs/followed/' + userId);
     }
 
 

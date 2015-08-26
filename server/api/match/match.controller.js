@@ -222,9 +222,10 @@ exports.unfollowMatch = function(req, res) {
 
 // Updates an existing match in the DB.
 exports.followedMatch = function(req, res) {
-  User.findById(req.params.userId).populate('followed', function (err, user) {
+  console.log('here');
+  User.findById(req.params.userId).populate('follow', function (err, user) {
     if (err) { return handleError(res, err); }
-    return res.status(200).json(user.followed);
+    return res.status(200).json(user.follow);
   })
 };
 
