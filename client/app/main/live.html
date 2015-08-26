@@ -3,6 +3,12 @@
 <div class="md-toolbar-tools" style="width:100%">
   <h3>
 	  <span>{{ match.team.dom.name }}  {{ match.team.dom.score }} - {{ match.team.ext.score }}  {{ match.team.ext.name }}</span>
+    <button ng-hide="isMatchFollowed" class="md-icon-button md-button" ng-click="followMatch()" aria-label="Favorite">
+      <md-icon class="fa fa-star-o" style="color:white"></md-icon>
+    </button>
+    <button ng-show="isMatchFollowed" class="md-icon-button md-button md-default-theme" ng-click="unFollowMatch()" aria-label="Favorite">
+      <md-icon class="fa fa-star" style="color:white" ></md-icon>
+    </button>
   </h3>
 </div>
 </md-toolbar>

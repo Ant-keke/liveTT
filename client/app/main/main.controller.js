@@ -8,7 +8,7 @@ angular.module('liveTtApp')
     // load cookie, or start new tour
     $scope.currentStep =  0;
     /** 
-    * @State matchs 
+    * @State matchs
     * @route / 
     */
     $scope.matchs = [];
@@ -49,6 +49,9 @@ angular.module('liveTtApp')
           match.comments[i].created = new Date(match.comments[i].created);
         };
         $scope.match = match;
+        console.log(Auth.getCurrentUser());
+        $scope.isMatchFollowed = (Auth.getCurrentUser().follow.indexOf($scope.match._id) >= 0);
+        console.log($scope.isMatchFollowed);
         createSocket();
         $scope.match.games = $scope.match.games || [];
         isAuthor();
@@ -143,7 +146,33 @@ angular.module('liveTtApp')
           }
         })
       } 
-    }
+    };
+
+    $scope.followMatch = function() {
+      if($scope.isAuth) {
+        if(!$scope.isMatchFollowed) {
+          $match.followMatch($scope.match._id, Auth.getCurrentUser()._id).then(function(res){
+            $scope.isMatchFollowed = true;
+            $mdToast.show($mdToast.simple().content('Match correctement ajouté aux favoris').theme('success-toast'));
+          });
+        } else {
+          $mdToast.show($mdToast.simple().content('Ce match est déja dans vos favoris').theme('success-toast'));
+        }
+      } else {
+          $mdToast.show($mdToast.simple().content('Vous devez etre authentifié pour ajouter un match à vos favoris.').theme('danger-toast'));
+      }
+    } 
+
+    $scope.unFollowMatch = function() {
+        if($scope.isMatchFollowed) {
+          $match.unFollowMatch($scope.match._id, Auth.getCurrentUser()._id).then(function(res){
+            $scope.isMatchFollowed = false;
+            $mdToast.show($mdToast.simple().content('Match correctement supprimé de vos favoris').theme('success-toast'));
+          });
+        } else {
+          $mdToast.show($mdToast.simple().content('Ce match n\'est pas dans vos favoris').theme('success-toast'));
+        }
+    } 
 
 
     $scope.deleteGame = function(index, gameId) {
@@ -256,7 +285,7 @@ angular.module('liveTtApp')
     /* Socket */
     function createSocket(){
       socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
-        console.log('upda')
+        console.log(item)
           $scope.match = item;
       });
      $scope.$on('$destroy', function () {

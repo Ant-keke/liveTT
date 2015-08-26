@@ -14,4 +14,10 @@ router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.delete('/:id/player/:pid', controller.deletePlayer);
 router.post('/:id/games', controller.addGame);
+
+router.put('/:id/follow', controller.followMatch);
+router.put('/:id/unfollow', controller.unfollowMatch);
+router.put('/followed/:userId', controller.followedMatch);
+
+
 module.exports = router;

@@ -14,6 +14,7 @@ var UserSchema = new Schema({
     default: 'user'
   },
   matchs: [{type: Schema.Types.ObjectId, ref:'Match'}],
+  follow: [{type: Schema.Types.ObjectId, ref:'Match'}],
   hashedPassword: String,
   provider: String,
   salt: String,

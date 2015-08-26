@@ -50,6 +50,18 @@ angular.module('liveTtApp')
       return $http.put('/api/games/' + gameId + '/score', score);
     }
 
+    service.followMatch = function(matchId, userId) {
+      return $http.put('api/matchs/' + matchId + '/follow', {user:userId});
+    }
+
+    service.unFollowMatch = function(matchId, userId) {
+      return $http.put('api/matchs/' + matchId + '/unfollow', {user:userId});
+    }
+
+    service.followedMatch = function(userId) {
+      return $http.put('api/matchs/followed/', {userId:userId});
+    }
+
 
 	return service;
   });

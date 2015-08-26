@@ -51,9 +51,13 @@ exports.create = function(req, res) {
   req.body.team.dom.save();
   req.body.team.ext.save();
   Match.create(req.body, function(err, match) {
-    if(err) { return handleError(res, err); }
-    return res.status(201).json(match);
-  });
+    user.matchs = user.matchs || [];
+    user.matchs.push(match);
+    user.save( function (err, user) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json(match);
+      });
+    });
 };
 
 // Updates an existing match in the DB.
@@ -182,6 +186,48 @@ exports.updateActive = function(req, res) {
     });
   });
 };
+
+
+// Updates an existing match in the DB.
+exports.followMatch = function(req, res) {
+  Match.findById(req.params.id, function (err, match) {
+    if (err) { return handleError(res, err); }
+    if(!match) { return res.status(404).send('Not Found'); }
+    User.findById(req.body.user, function (err, user) {
+      user.follow = user.follow || [];
+      user.follow.push(match);
+      user.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.status(200).send("Match correctement ajouté aux favoris");
+      });
+    })
+  });
+};
+
+// Updates an existing match in the DB.
+exports.unfollowMatch = function(req, res) {
+  User.findById(req.body.user, function (err, user) {
+    var id = user.follow.indexOf(req.params.id);
+    if(id >= 0) {
+      user.follow.splice(id,1);
+      user.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.status(200).send("Match correctement retiré des favoris");
+      });
+    } else {
+        return res.status(301).send("Match non trouvé");
+    }
+  });
+};
+
+// Updates an existing match in the DB.
+exports.followedMatch = function(req, res) {
+  User.findById(req.params.userId).populate('followed', function (err, user) {
+    if (err) { return handleError(res, err); }
+    return res.status(200).json(user.followed);
+  })
+};
+
 
 
 function handleError(res, err) {
