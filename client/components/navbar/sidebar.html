@@ -13,7 +13,13 @@
     <md-list class="sidebar-item">
       <md-list-item ng-click="navigateTo('main')">
         <md-icon class="fa fa-video-camera"></md-icon>
-        <p>Matchs en cours</p>
+        <p>Rencontres en cours</p>
+      </md-list-item>
+    </md-list>
+    <md-list class="sidebar-item" ng-if="isLoggedIn()">
+      <md-list-item ng-click="navigateTo('favorite')">
+        <md-icon class="fa fa-star"></md-icon>
+        <p>Favoris</p>
       </md-list-item>
     </md-list>
   </md-content>

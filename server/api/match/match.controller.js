@@ -21,11 +21,29 @@ var promise = require('promise');
 
 // Get list of matchs
 exports.index = function(req, res) {
-  Match.find({}).sort([['created', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
+  Match.find({}).sort([['date', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(matchs);
   });
 };
+
+// Get list of matchs
+exports.activeMatchs = function(req, res) {
+  Match.find({'active':true}).sort([['date', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(matchs);
+  });
+};
+
+
+// Get list of matchs
+exports.comingMatchs = function(req, res) {
+  Match.find({'date': {"$gte": new Date()},'active':false}).sort([['date', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(matchs);
+  });
+};
+
 
 // Get a single match
 exports.show = function(req, res) {
@@ -222,10 +240,12 @@ exports.unfollowMatch = function(req, res) {
 
 // Updates an existing match in the DB.
 exports.followedMatch = function(req, res) {
-  console.log('here');
-  User.findById(req.params.userId).populate('follow', function (err, user) {
-    if (err) { return handleError(res, err); }
-    return res.status(200).json(user.follow);
+  User.findById(req.params.userId).populate('follow').exec( function (err, user) {
+    user.populate({path:'follow.author',select:'username',model:'User'}).populate({path:'follow.team.dom follow.team.ext', model: 'Team'}, function (err, user) {
+      if (err) { return handleError(res, err); }
+      console.log(user.follow);
+      return res.status(200).json(user.follow);
+    });
   })
 };
 

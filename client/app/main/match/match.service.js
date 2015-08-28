@@ -14,15 +14,23 @@ angular.module('liveTtApp')
   	};
 
   	service.getMatch = function(id) {
-		var deferred = $q.defer();
-		$http.get('/api/matchs/' + id).success(function(match) {
-	        deferred.resolve(match);
-		},
-		function(err) {
-			console.log(err);
-		});
-		return deferred.promise;
+  		var deferred = $q.defer();
+  		$http.get('/api/matchs/' + id).success(function(match) {
+  	        deferred.resolve(match);
+  		},
+  		function(err) {
+  			console.log(err);
+  		});
+  		return deferred.promise;
   	};
+
+    service.getActiveMatchs = function() {
+      $http.get('/api/matchs/active')
+    };
+
+    service.getComingMatchs = function() {
+      $http.get('/api/matchs/coming')
+    };
 
   	service.create = function(match) {
       match.author = Auth.getCurrentUser()._id;
