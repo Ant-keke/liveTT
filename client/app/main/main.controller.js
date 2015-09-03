@@ -4,7 +4,6 @@ angular.module('liveTtApp')
   .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location, Auth) {
 
     $scope.isAuth = !!Auth.getCurrentUser()._id;
-
     // load cookie, or start new tour
     $scope.currentStep =  0;
     /** 
@@ -12,8 +11,8 @@ angular.module('liveTtApp')
     * @route / 
     */
     $scope.matchs = [];
-    $match.getMatchs().then(function(matchs) {
-        $scope.matchs = matchs;
+    $match.getActiveMatchs().then(function(res) {
+        $scope.matchs = res.data;
     });
 
     /** 
@@ -38,6 +37,9 @@ angular.module('liveTtApp')
 
     
     $scope.divisions = ['PRO A','PRO B','N1','N2','N3','PNZ','R1','R2','R3','R4','R5','PR','D1','D2','D3','D4','D5'];
+    $scope.zones = ['Z01','Z02','Z03','Z04','Z05','Z06','Z07'];
+    $scope.ligues = ['Rhone Alpes','Alsace','Aquitaine','Pays de la Loire','Auvergne','Bourgogne','Bretagne','Champagne Ardennes','PACA','Nord Pas de Calais','Franche Comté','Ile de France','Languedoc Roussillon','Limousin','Lorraine','Basse Normandie','Haute Normandie','Picardie','Poitou Charentes','Provence','Midi Pyrénées','Centre','Corse','Guyane','Reunion','Nouvelle Calédonie','Guadeloupe','Martinique','Mayotte','Tahiti','Wallis Et Futuna'];
+    $scope.departements = [{ "id": "01", "nom": "AIN"},{ "id": "02", "nom": "AISNE"},{ "id": "03", "nom": "ALLIER"},{ "id": "04", "nom": "ALPES-DE-HAUTE-PROVENCE"},{ "id": "05", "nom": "HAUTES-ALPES"},{ "id": "06", "nom": "ALPES-MARITIMES"},{ "id": "07", "nom": "ARDECHE"},{ "id": "08", "nom": "ARDENNES"}, { "id": "09", "nom": "ARIEGE"},{ "id": "10", "nom": "AUBE"}, { "id": "11", "nom": "AUDE"},{ "id": "12", "nom": "AVEYRON"},{ "id": "13", "nom": "BOUCHES-DU-RHONE"},{ "id": "14", "nom": "CALVADOS"},{ "id": "15", "nom": "CANTAL"},{ "id": "16", "nom": "CHARENTE"},{ "id": "17", "nom": "CHARENTE-MARITIME"},{ "id": "18", "nom": "CHER"},{ "id": "19", "nom": "CORREZE"},{ "id": "21", "nom": "COTE-D'OR"},{ "id": "22", "nom": "COTES-D'ARMOR"},{ "id": "23", "nom": "CREUSE"},{ "id": "24", "nom": "DORDOGNE"},{ "id": "25", "nom": "DOUBS"},{ "id": "26", "nom": "DROME"},{ "id": "27", "nom": "EURE"},{ "id": "28", "nom": "EURE-ET-LOIR"},{ "id": "29", "nom": "FINISTERE"},{ "id": "2A", "nom": "CORSE-DU-SUD"},{ "id": "2B", "nom": "HAUTE-CORSE"},{ "id": "30", "nom": "GARD"},{ "id": "31", "nom": "HAUTE-GARONNE"},{ "id": "32", "nom": "GERS"},{ "id": "33", "nom": "GIRONDE"},{ "id": "34", "nom": "HERAULT"},{ "id": "35", "nom": "ILLE-ET-VILAINE"},{ "id": "36", "nom": "INDRE"},{ "id": "37", "nom": "INDRE-ET-LOIRE"},{ "id": "38", "nom": "ISERE"},{ "id": "39", "nom": "JURA"},{ "id": "40", "nom": "LANDES"},{ "id": "41", "nom": "LOIR-ET-CHER"},{ "id": "42", "nom": "LOIRE"},{ "id": "43", "nom": "HAUTE-LOIRE"},{ "id": "44", "nom": "LOIRE-ATLANTIQUE"},{ "id": "45", "nom": "LOIRET"},{ "id": "46", "nom": "LOT"},{ "id": "47", "nom": "LOT-ET-GARONNE"},{ "id": "48", "nom": "LOZERE"},{ "id": "49", "nom": "MAINE-ET-LOIRE"},{ "id": "50", "nom": "MANCHE"},{ "id": "51", "nom": "MARNE"},{ "id": "52", "nom": "HAUTE-MARNE"},{ "id": "53", "nom": "MAYENNE"},{ "id": "54", "nom": "MEURTHE-ET-MOSELLE"},{ "id": "55", "nom": "MEUSE"},{ "id": "56", "nom": "MORBIHAN"},{ "id": "57", "nom": "MOSELLE"},{ "id": "58", "nom": "NIEVRE"},{ "id": "59", "nom": "NORD"},{ "id": "60", "nom": "OISE"},{ "id": "61", "nom": "ORNE"},{ "id": "62", "nom": "PAS-DE-CALAIS"}, { "id": "63", "nom": "PUY-DE-DOME"},{ "id": "64", "nom": "PYRENEES-ATLANTIQUES"},{ "id": "65", "nom": "HAUTES-PYRENEES"},{ "id": "66", "nom": "PYRENEES-ORIENTALES"},{ "id": "67", "nom": "BAS-RHIN"},{ "id": "68", "nom": "HAUT-RHIN"},{ "id": "69", "nom": "RHONE"},{ "id": "70", "nom": "HAUTE-SAONE"},{ "id": "71", "nom": "SAONE-ET-LOIRE"},{ "id": "72", "nom": "SARTHE"},{ "id": "73", "nom": "SAVOIE"},{ "id": "74", "nom": "HAUTE-SAVOIE"},{ "id": "75", "nom": "PARIS"},{ "id": "76", "nom": "SEINE-MARITIME"},{ "id": "77", "nom": "SEINE-ET-MARNE"},{ "id": "78", "nom": "YVELINES"},{ "id": "79", "nom": "DEUX-SEVRES"},{ "id": "80", "nom": "SOMME"},{ "id": "81", "nom": "TARN"},{ "id": "82", "nom": "TARN-ET-GARONNE"},{ "id": "83", "nom": "VAR"},{ "id": "84", "nom": "VAUCLUSE"},{ "id": "85", "nom": "VENDEE"},{ "id": "86", "nom": "VIENNE"},{ "id": "87", "nom": "HAUTE-VIENNE"},{ "id": "88", "nom": "VOSGES"},{ "id": "89", "nom": "YONNE"}, { "id": "90", "nom": "TERRITOIRE DE BELFORT"},{ "id": "91", "nom": "ESSONNE"},{ "id": "92", "nom": "HAUTS-DE-SEINE"},{ "id": "93", "nom": "SEINE-SAINT-DENIS"},{ "id": "94", "nom": "VAL-DE-MARNE"},{ "id": "95", "nom": "VAL-D'OISE"}]
     
     /** 
     * @State live 
@@ -49,9 +51,11 @@ angular.module('liveTtApp')
           match.comments[i].created = new Date(match.comments[i].created);
         };
         $scope.match = match;
-        console.log(Auth.getCurrentUser());
-        $scope.isMatchFollowed = (Auth.getCurrentUser().follow.indexOf($scope.match._id) >= 0);
-        console.log($scope.isMatchFollowed);
+        if($scope.isAuth) {
+          $scope.isMatchFollowed = (Auth.getCurrentUser().follow.indexOf($scope.match._id) >= 0);
+        } else {
+          $scope.isMatchFollowed = false;
+        }
         createSocket();
         $scope.match.games = $scope.match.games || [];
         isAuthor();
@@ -96,14 +100,17 @@ angular.module('liveTtApp')
     };
     
     $scope.updateSet = function(matchId,teamType){
-      if($scope.isAuthor){
+      if(!$scope.waitScore && $scope.isAuthor && checkActive()){
         $scope.match.games[matchId].score[teamType] = (++$scope.match.games[matchId].score[teamType] % 4);
-        $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score);
+        $scope.waitScore = true;
+        $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score).then(function(res) {
+          $scope.waitScore = false;
+        });
       }
     };
 
     $scope.updatePoints = function(matchId, setId, teamType){
-      if($scope.isAuthor) {
+      if(!$scope.waitScore && $scope.isAuthor && checkActive()) {
         var enabled = true;
         var teamOpp = (teamType == 'dom') ? 'ext' : 'dom';
         /* Check if precedent sets are finished */
@@ -131,7 +138,10 @@ angular.module('liveTtApp')
           } else {
             $scope.match.games[matchId].score.details[setId][teamType] = 0;
           }
-          $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score);
+          $scope.waitScore = true;
+          $match.updateScore($scope.match.games[matchId]._id, $scope.match.games[matchId].score).then(function(res) {
+            $scope.waitScore = false;
+          });
         }
       }
     };
@@ -148,11 +158,23 @@ angular.module('liveTtApp')
       } 
     };
 
+     function checkActive() {
+      if($scope.match.active) {
+          return true;
+        } else {
+          $mdToast.show($mdToast.simple().content('Impossible de modifier le score. Ce live n\'est pas encore actif').theme('danger-toast'));
+          return false;
+        }
+    };
+
     $scope.followMatch = function() {
       if($scope.isAuth) {
         if(!$scope.isMatchFollowed) {
           $match.followMatch($scope.match._id, Auth.getCurrentUser()._id).then(function(res){
             $scope.isMatchFollowed = true;
+            $scope.match = res.data;
+            Auth.getCurrentUser().follow = Auth.getCurrentUser().follower || [];
+            Auth.getCurrentUser().follow.push($scope.match._id);
             $mdToast.show($mdToast.simple().content('Match correctement ajouté aux favoris').theme('success-toast'));
           });
         } else {
@@ -211,9 +233,6 @@ angular.module('liveTtApp')
     };
 
     $scope.addMatch = function() {
-      if($scope.newMatch === '') {
-        return;
-      }
       $match.create($scope.newMatch).then(function(res){
         $mdToast.show($mdToast.simple().content('Live correctement crée!').theme('success-toast'));
         
@@ -246,10 +265,13 @@ angular.module('liveTtApp')
     */
     $scope.addComment = function() {
       if($scope.isAuth) {
-        $match.addComment($scope.comment.body, Auth.getCurrentUser()._id, $scope.match._id).then(function(res){
-          $scope.comment= {};
-          $scope.match.comments.push(res.data);
-        })
+        console.log($scope.comment)
+        if($scope.comment.body && $scope.comment.body != null) {
+          $match.addComment($scope.comment.body, Auth.getCurrentUser()._id, $scope.match._id).then(function(res){
+            $scope.comment= {};
+            $scope.match.comments.push(res.data);
+          });
+        }
       } else {
           $mdToast.show($mdToast.simple().content('Vous devez etre authentifié pour poster un commentaire.').theme('danger-toast'));
       }
@@ -285,7 +307,7 @@ angular.module('liveTtApp')
     /* Socket */
     function createSocket(){
       socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
-        console.log(item)
+          console.log(item)
           $scope.match = item;
       });
      $scope.$on('$destroy', function () {
@@ -295,3 +317,6 @@ angular.module('liveTtApp')
 
 
   });
+
+
+

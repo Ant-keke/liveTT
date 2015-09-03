@@ -18,9 +18,9 @@ exports.register = function(socket) {
 function onSave(socket, doc, cb) {
   doc.populate('games team.dom team.ext comments').populate('author','username', function (err, data) {
     data.populate({path:'team.dom.players team.ext.players',model:'Player'}).populate({path:'comments.author',model:'User'},function (err, match){
-		socket.emit( match._id + ':save', match);
-	});
-});
+		  socket.emit( match._id + ':save', match);
+	 });
+  });
 }
 
 function onRemove(socket, doc, cb) {

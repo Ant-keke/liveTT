@@ -25,11 +25,15 @@ angular.module('liveTtApp')
   	};
 
     service.getActiveMatchs = function() {
-      $http.get('/api/matchs/active')
+      return $http.get('/api/matchs/active')
     };
 
     service.getComingMatchs = function() {
-      $http.get('/api/matchs/coming')
+      return $http.get('/api/matchs/coming')
+    };
+
+    service.getMyMatchs = function() {
+      return $http.get('/api/matchs/me')
     };
 
   	service.create = function(match) {
@@ -69,7 +73,6 @@ angular.module('liveTtApp')
     service.followedMatch = function(userId) {
       return $http.get('api/matchs/followed/' + userId);
     }
-
 
 	return service;
   });

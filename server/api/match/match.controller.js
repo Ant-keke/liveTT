@@ -38,7 +38,9 @@ exports.activeMatchs = function(req, res) {
 
 // Get list of matchs
 exports.comingMatchs = function(req, res) {
-  Match.find({'date': {"$gte": new Date()},'active':false}).sort([['date', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
+  var start = new Date();
+  start.setHours(0);start.setMinutes(0);start.setSeconds(0);
+  Match.find({'date': {"$gte": start}}).sort([['date', 'ascending']]).populate('team.dom team.ext').populate('author','username').exec(function (err, matchs) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(matchs);
   });
@@ -63,19 +65,19 @@ exports.create = function(req, res) {
   User.findById(req.body.author, function (err, user) {
     if (err) { return handleError(res, err); }
     req.body.author = user;
-  });
-  req.body.team.dom = new Team({ name: req.body.team.dom.name});
-  req.body.team.ext = new Team({ name: req.body.team.ext.name});
-  req.body.team.dom.save();
-  req.body.team.ext.save();
-  Match.create(req.body, function(err, match) {
-    user.matchs = user.matchs || [];
-    user.matchs.push(match);
-    user.save( function (err, user) {
-        if(err) { return handleError(res, err); }
-        return res.status(201).json(match);
+    req.body.team.dom = new Team({ name: req.body.team.dom.name});
+    req.body.team.ext = new Team({ name: req.body.team.ext.name});
+    req.body.team.dom.save();
+    req.body.team.ext.save();
+    Match.create(req.body, function(err, match) {
+      user.matchs = user.matchs || [];
+      user.matchs.push(match);
+      user.save( function (err, user) {
+          if(err) { return handleError(res, err); }
+          return res.status(201).json(match);
+        });
       });
-    });
+  });
 };
 
 // Updates an existing match in the DB.
@@ -213,10 +215,14 @@ exports.followMatch = function(req, res) {
     if(!match) { return res.status(404).send('Not Found'); }
     User.findById(req.body.user, function (err, user) {
       user.follow = user.follow || [];
-      user.follow.push(match);
-      user.save(function (err) {
-        if (err) { return handleError(res, err); }
-        return res.status(200).send("Match correctement ajouté aux favoris");
+      match.followers = match.followers || [];
+      match.followers.push(user);
+      match.save(function (err, match) {
+        user.follow.push(match);
+        user.save(function (err) {
+          if (err) { return handleError(res, err); }
+          return res.status(200).json(match);
+        });
       });
     })
   });
@@ -225,28 +231,48 @@ exports.followMatch = function(req, res) {
 // Updates an existing match in the DB.
 exports.unfollowMatch = function(req, res) {
   User.findById(req.body.user, function (err, user) {
-    var id = user.follow.indexOf(req.params.id);
-    if(id >= 0) {
-      user.follow.splice(id,1);
-      user.save(function (err) {
-        if (err) { return handleError(res, err); }
-        return res.status(200).send("Match correctement retiré des favoris");
-      });
-    } else {
-        return res.status(301).send("Match non trouvé");
-    }
+    Match.findById( req.params.id, function (err, match) {
+      var idUser = match.followers.indexOf(req.body.user);
+      var idMatch = user.follow.indexOf(req.params.id);
+      if(idMatch >= 0 && idUser >= 0) {
+        user.follow.splice(idMatch,1);
+        match.followers.splice(idUser,1);
+        user.save(function (err) {
+          if (err) { return handleError(res, err); }
+          match.save(function (err) {
+            if (err) { return handleError(res, err); }
+            return res.status(200).json(match);
+          })
+        });
+      } else {
+          return res.status(301).send("Match non suivi");
+      }
+    });
   });
 };
 
 // Updates an existing match in the DB.
 exports.followedMatch = function(req, res) {
   User.findById(req.params.userId).populate('follow').exec( function (err, user) {
-    user.populate({path:'follow.author',select:'username',model:'User'}).populate({path:'follow.team.dom follow.team.ext', model: 'Team'}, function (err, user) {
       if (err) { return handleError(res, err); }
-      console.log(user.follow);
+      user.populate({path:'follow.author',select:'username',model:'User'}).populate({path:'follow.team.dom follow.team.ext', model: 'Team'}, function (err, user) {
       return res.status(200).json(user.follow);
     });
   })
+};
+
+/**
+ * Get my info
+ */
+exports.myMatchs = function(req, res, next) {
+  var userId = req.user._id;
+  User.findById(userId).populate('matchs').exec( function (err, user) { // don't ever give out the password or salt
+    if (err) return next(err);
+    if (!user) return res.status(401).send('Unauthorized');
+    user.populate({path:'matchs.author',select:'username',model:'User'}).populate({path:'matchs.team.dom matchs.team.ext', model: 'Team'}, function (err, user) {
+      return res.status(200).json(user.matchs);
+    });
+  });
 };
 
 

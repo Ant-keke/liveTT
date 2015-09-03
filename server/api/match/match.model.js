@@ -6,6 +6,9 @@ var mongoose = require('mongoose'),
 var MatchSchema = new Schema({
   name: String,
   body: String,
+  ligue: String,
+  poule: String,
+  journee: Number,
   division: String,
   created: {type: Date, default: Date.now},
   updated: {type: Date, default: Date.now},
@@ -17,7 +20,8 @@ var MatchSchema = new Schema({
   	ext: {type: Schema.Types.ObjectId, ref:'Team'}
   },
   author: {type: Schema.Types.ObjectId, ref: 'User'},
-  active: { type: Boolean, default: true }
+  followers: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  active: { type: Boolean, default: false }
 });
 
 

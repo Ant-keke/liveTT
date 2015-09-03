@@ -4,22 +4,47 @@
   </md-toolbar>
   <md-content layout-padding ng-controller="NavbarCtrl" class="sidebar-content">
     <md-list >
-      <md-list-item ng-click="navigateTo('settings')" ng-if="isLoggedIn()">
+      <md-list-item ng-if="isLoggedIn()">
         <img ng-if="!getCurrentUser().photo" ng-src="assets/images/default_user.png" class="md-avatar" alt="{{getCurrentUser().username}}" />
         <img ng-if="getCurrentUser().photo" ng-src="{{getCurrentUser().photo}}" class="md-avatar" alt="{{getCurrentUser().username}}" />
         <p class="md-title md-primary">{{getCurrentUser().username}}</p>
+        <md-button ng-show="isLoggedIn()" class="md-icon-button " aria-label="Logout" ng-click="logout()">
+            <i class="fa fa-power-off"></i>
+        </md-button>
+      </md-list-item>
+      <md-list-item ng-click="navigateTo('login')" ng-if="!isLoggedIn()">
+        <md-icon class="fa fa-user"></md-icon>
+        <p>Connexion</p>
+      </md-list-item>
+    </md-list>
+    <md-list class="sidebar-item">
+      <md-list-item ng-click="navigateTo('coming')">
+        <md-icon class="fa fa-calendar-plus-o"></md-icon>
+        <p>Rencontres à venir</p>
       </md-list-item>
     </md-list>
     <md-list class="sidebar-item">
       <md-list-item ng-click="navigateTo('main')">
         <md-icon class="fa fa-video-camera"></md-icon>
-        <p>Rencontres en cours</p>
+        <p>Rencontres en live actuellement</p>
       </md-list-item>
     </md-list>
     <md-list class="sidebar-item" ng-if="isLoggedIn()">
       <md-list-item ng-click="navigateTo('favorite')">
         <md-icon class="fa fa-star"></md-icon>
         <p>Favoris</p>
+      </md-list-item>
+    </md-list>
+    <md-list class="sidebar-item" ng-if="isLoggedIn()">
+      <md-list-item ng-click="navigateTo('mylives')">
+        <md-icon class="fa fa-user"></md-icon>
+        <p>Mes rencontres</p>
+      </md-list-item>
+    </md-list>
+    <md-list class="sidebar-item" ng-if="isLoggedIn()">
+      <md-list-item ng-click="navigateTo('create')">
+        <md-icon class="fa fa-plus"></md-icon>
+        <p>Créer une rencontre</p>
       </md-list-item>
     </md-list>
   </md-content>

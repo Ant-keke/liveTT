@@ -7,6 +7,14 @@ $background-comment: #E5E6EC;
 
 }
 
+.container {
+    background: rgb(233, 239, 245);
+}
+
+.background-color {
+    background: rgb(233, 239, 245);
+}
+
 button, select, html, textarea, input {
     font-family: RobotoDraft,Roboto,'Helvetica Neue',sans-serif;
 }
@@ -83,8 +91,31 @@ button, select, html, textarea, input {
 
 
 .tt-score {
-    position: relative;
+  position:relative;
+  margin:2px;
+  white-space:normal !important;
+  font-size:0.8em !important;
+  font-weight:600 !important;
+  color: rgba(9, 17, 90, 0.48) !important;
 }
+
+.tt-score > strong {
+    font-size:0.9em !important;
+    font-weight:800 !important;
+    color: rgba(9, 17, 90, 0.68) !important;
+}
+
+
+
+.tt-match-list-name {
+  font-size:0.75em !important;
+  font-weight:600 !important;
+  line-height:1em !important;
+  white-space:normal !important;
+  color: rgba(9, 17, 90, 0.78) !important;
+  paddin-bottom:0px;
+}
+
 
 .tt-filterNav {
     position:relative;
@@ -123,10 +154,12 @@ button, select, html, textarea, input {
 
 
 md-toast.md-success-toast-theme {
+    z-index:1000;
     background-color: #01579b;
 }
 
 md-toast.md-danger-toast-theme {
+    z-index:1000;
     background-color: #FF8F00;
 }
 
@@ -194,7 +227,7 @@ md-content {
   top:-6px;
   color : rgba(255, 255, 255, 0.6);
   position:relative;
-  font-size:1.3em;
+  font-size:1.5em;
   font-weight:800;
 }
 
@@ -202,14 +235,15 @@ md-content {
   top:-6px;
   color : rgba(255, 255, 255, 0.9);
   position:relative;
-  font-size:1em;
-  font-weight:600;
+  font-size:0.8em;
+  font-weight:500;
 }
 
 .sidebar-item {
   padding:0px;
   margin:0px;
 }
+
 
 .sidebar-content {
   padding:0px;
@@ -223,3 +257,31 @@ md-content {
 .tt-live-container md-tabs {
   height:100%;
 }
+
+
+.tt-match-list-title {
+  font-weight: 600;
+  color:rgba(93, 80, 80, 0.68);
+}
+
+.tt-no-matchs-yet {
+  font-weight: 600;
+  color:rgba(93, 80, 80, 0.38);
+}
+
+
+.tt-img-no-matchs {
+  position:relative;
+  margin-left:calc(50% - 112px);
+}
+
+.tt-img-rencontre {
+  background:rgba(217, 223, 249, 0.38);
+  border: 1px solid rgba(93, 80, 80, 0.38);
+  padding:5px;
+}
+
+ .btn-social {
+  width:220px;
+  margin-top:10px
+ }

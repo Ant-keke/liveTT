@@ -6,6 +6,10 @@
           <i class="fa fa-bars"></i>
         </md-button>
       </div>
+      <ul class="nav navbar-nav" style="margin-left:15px">
+        <li ng-class="{active: isActive('/')}">LIVE TT</li>
+      </ul>
+    </div>
 <!--  <div>
         <ul class="nav navbar-nav">
           <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
@@ -22,13 +26,5 @@
           <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()">Logout</a></li>
         </ul>
       </div> -->
-      <md-button ng-show="isLoggedIn()" class="md-icon-button pull-right" aria-label="Logout" ng-click="logout()">
-          <i class="fa fa-power-off"></i>
-      </md-button>
-      <md-button ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}" 
-        md-no-ink class="md-primary  pull-right" aria-label="Login" href="/login" style="color:white">
-        LOG IN
-      </md-button>
-    </div>
   </md-toolbar>
 </md-content>

@@ -3,12 +3,11 @@
 <md-toolbar class="md-primary" md-scroll-shrink style="margin-top:64px;z-index:100">
   <h2 class="md-toolbar-tools">
     <span flex>Favoris</span>
-    <md-button class="md-icon-button" aria-label="Refresh" ng-click="refreshMatchs()">
-        <i class="fa fa-refresh"></i>
-    </md-button>
-    <md-button class="md-icon-button" aria-label="Refresh" ng-click="toggleFilter()">
-        <i class="fa fa-filter"></i>
-    </md-button>
   </h2>
 </md-toolbar>
 <div ng-include="'components/match/match-list.html'" style="width:100%"></div>
+<div ng-show="matchs.length == 0"  style="position:relative;top:30px; height:100px">
+	<h4 class="text-center tt-no-matchs-yet">Vous ne suivez aucune rencontres actuellement</h4>
+	<h4 class="text-center tt-no-matchs-yet">Cliquez sur les icones <md-icon class="fa fa-star-o"></md-icon> pour suivre une rencontre</h4>
+    <img src="assets/images/no_matchs.png" class="tt-img-no-matchs"/>
+</div>
