@@ -1,0 +1,16 @@
+<div ng-include="'components/navbar/sidebar.html'"></div>
+
+<md-toolbar class="md-primary" md-scroll-shrink style="margin-top:64px;z-index:100">
+  <h2 class="md-toolbar-tools">
+    <span flex>Rencontres à venir</span>
+  </h2>
+</md-toolbar>
+<div ng-hide="matchs.length == 0" ng-include="'components/match/match-list.html'" style="width:100%"></div>
+<div ng-show="matchs.length == 0">
+	<h4 class="text-center">Il n'y a aucun lives à venir actuellement</h4>
+	<h4 class="text-center">Pour créer votre propre live appuyez sur le boutton plus ci dessous</h4>
+    <img src="assets/images/no_matchs.png" class="tt-img-no-matchs"/>
+</div>
+<md-button class="tt-fab-button md-fab md-accent" href="/match/new" aria-label="New Match">
+	<i class="fa fa-plus fa-lg" style="color:white"></i> 
+</md-button>

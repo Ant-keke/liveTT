@@ -436,7 +436,18 @@ module.exports = function (grunt) {
         'svgmin'
       ]
     },
-
+    shell: {
+      cordova: {
+        command: [
+          'cp -r dist/public cordova',
+          'rm -r cordova/www',
+          'mv cordova/public cordova/www',
+          'cd cordova',
+          'cordova build',
+          'cd ..'
+        ].join('&&')
+      }
+    },
     // Test settings
     karma: {
       unit: {
@@ -557,6 +568,7 @@ module.exports = function (grunt) {
           ]
         }
       },
+
 
       // Inject component css into index.html
       css: {
