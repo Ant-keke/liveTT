@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location, Auth) {
+  .controller('MainCtrl', function ($scope, $http, socket, $match, $stateParams, $mdDialog, $mdToast, $mdSidenav, $mdUtil, $log, $location, Auth, ENV) {
 
     $scope.isAuth = !!Auth.getCurrentUser()._id;
     // load cookie, or start new tour
@@ -67,7 +67,7 @@ angular.module('liveTtApp')
     
     $scope.deleteMatch = function(match) {
       if($scope.isAuthor) {
-        $http.delete('/api/matchs/' + match._id).then(function(res){
+        $http.delete(ENV.apiEndpoint + 'api/matchs/' + match._id).then(function(res){
           $scope.match = {};
           $location.path('/');
           $mdToast.show($mdToast.simple().content('Match correctement supprimé').theme('success-toast'));
@@ -88,7 +88,7 @@ angular.module('liveTtApp')
         })
         .then(function(game) {
           game.match = $scope.match;
-          $http.post('/api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
+          $http.post(ENV.apiEndpoint + 'api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
             $scope.match.games.push(res.data);
             $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
           },
@@ -200,7 +200,7 @@ angular.module('liveTtApp')
     $scope.deleteGame = function(index, gameId) {
       if($scope.isAuthor) {
         if(confirm('Etes vous sur de vouloir supprimer ce match ?')) {
-          $http.delete("/api/games/" + gameId).then(function(res){
+          $http.delete(ENV.apiEndpoint + "api/games/" + gameId).then(function(res){
             $scope.match.games.splice(index,1)
            $mdToast.show($mdToast.simple().content('Match correctement supprimé!').theme('success-toast'));
           })
@@ -212,7 +212,7 @@ angular.module('liveTtApp')
     $scope.deletePlayer = function(index, teamType, playerId) {
       if($scope.isAuthor) {
         if(confirm('Etes vous sur de vouloir supprimer ce joueur ?')) {
-          $http.delete("/api/teams/" + $scope.match.team[teamType]._id + "/player/" + playerId).then(function(res){
+          $http.delete(ENV.apiEndpoint + "api/teams/" + $scope.match.team[teamType]._id + "/player/" + playerId).then(function(res){
            $scope.match.team[teamType].players.splice(index,1);
            $mdToast.show($mdToast.simple().content('Joueur correctement supprimé!').theme('success-toast'));
           })

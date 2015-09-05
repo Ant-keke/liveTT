@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .service('$match', function ($q, $http, Auth, $mdToast, $timeout) {
-	var service = {};
-
+  .service('$match', function ($q, $http, Auth, $mdToast, $timeout, ENV) {
+  
+  var service = {};
 	service.getMatchs = function() {
 		var deferred = $q.defer();
-		$http.get('/api/matchs').success(function(matchs) {
+		$http.get(ENV.apiEndpoint + 'api/matchs').success(function(matchs) {
 	        service.matchs = matchs;
 	        deferred.resolve(matchs);
 		});	
@@ -15,7 +15,7 @@ angular.module('liveTtApp')
 
   	service.getMatch = function(id) {
   		var deferred = $q.defer();
-  		$http.get('/api/matchs/' + id).success(function(match) {
+  		$http.get(ENV.apiEndpoint +  'api/matchs/' + id).success(function(match) {
   	        deferred.resolve(match);
   		},
   		function(err) {
@@ -25,53 +25,53 @@ angular.module('liveTtApp')
   	};
 
     service.getActiveMatchs = function() {
-      return $http.get('/api/matchs/active')
+      return $http.get(ENV.apiEndpoint + 'api/matchs/active')
     };
 
     service.getComingMatchs = function() {
-      return $http.get('/api/matchs/coming')
+      return $http.get(ENV.apiEndpoint + 'api/matchs/coming')
     };
 
     service.getMyMatchs = function() {
-      return $http.get('/api/matchs/me')
+      return $http.get(ENV.apiEndpoint + 'api/matchs/me')
     };
 
   	service.create = function(match) {
       match.author = Auth.getCurrentUser()._id;
       if(match.author) {
-      	return $http.post('/api/matchs', match);
+      	return $http.post(ENV.apiEndpoint + 'api/matchs', match);
       } else {
           $mdToast.show($mdToast.simple().content('Vous devez etre connecté pour créer un match').theme('danger-toast'));
       }
   	}
 
     service.updateActive = function(matchId, active) {
-      return $http.put('/api/matchs/' + matchId + '/active', {active: active});
+      return $http.put(ENV.apiEndpoint + 'api/matchs/' + matchId + '/active', {active: active});
     }
 
     service.addPlayer = function(player, teamId) {
-      return $http.post('/api/teams/' + teamId + '/player', player);
+      return $http.post(ENV.apiEndpoint + 'api/teams/' + teamId + '/player', player);
     }
 
 
     service.addComment = function(body, authorId, matchId) {
-      return $http.post('api/comments', {body:body,author:authorId,match:matchId});
+      return $http.post(ENV.apiEndpoint + 'api/comments', {body:body,author:authorId,match:matchId});
     }
 
     service.updateScore = function(gameId, score) {
-      return $http.put('/api/games/' + gameId + '/score', score);
+      return $http.put(ENV.apiEndpoint + 'api/games/' + gameId + '/score', score);
     }
 
     service.followMatch = function(matchId, userId) {
-      return $http.put('api/matchs/' + matchId + '/follow', {user:userId});
+      return $http.put(ENV.apiEndpoint + 'api/matchs/' + matchId + '/follow', {user:userId});
     }
 
     service.unFollowMatch = function(matchId, userId) {
-      return $http.put('api/matchs/' + matchId + '/unfollow', {user:userId});
+      return $http.put(ENV.apiEndpoint + 'api/matchs/' + matchId + '/unfollow', {user:userId});
     }
 
     service.followedMatch = function(userId) {
-      return $http.get('api/matchs/followed/' + userId);
+      return $http.get(ENV.apiEndpoint + 'api/matchs/followed/' + userId);
     }
 
 	return service;

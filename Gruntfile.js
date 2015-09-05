@@ -16,7 +16,8 @@ module.exports = function (grunt) {
     ngtemplates: 'grunt-angular-templates',
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
-    buildcontrol: 'grunt-build-control'
+    buildcontrol: 'grunt-build-control',
+    ngconstant: 'grunt-ng-constant'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -436,6 +437,40 @@ module.exports = function (grunt) {
         'svgmin'
       ]
     },
+
+    ngconstant: {
+      // Options for all targets
+      options: {
+        space: '  ',
+        wrap: '"use strict";\n\n {%= __ngModule %}',
+        name: 'config',
+      },
+      // Environment targets
+      development: {
+        options: {
+          dest: '<%= yeoman.client %>/app/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'development',
+            apiEndpoint: '/'
+          }
+        }
+      },
+      production: {
+        options: {
+          dest: '<%= yeoman.dist %>/scripts/config.js'
+        },
+        constants: {
+          ENV: {
+            name: 'production',
+            apiEndpoint: 'http://livett2.herokuapp.com/'
+          }
+        }
+      }
+    },
+
+
     shell: {
       cordova: {
         command: [
@@ -626,6 +661,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'ngconstant:development',
       'env:all',
       'injector:sass', 
       'concurrent:server',
@@ -688,6 +724,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'ngconstant:production',
     'injector:sass', 
     'concurrent:dist',
     'injector',
