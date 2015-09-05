@@ -13,6 +13,10 @@ module.exports = {
             process.env.PORT ||
             8080,
 
+
+  FACEBOOK_ID: '1628649370741441',
+  FACEBOOK_SECRET: '79e5d5480242ef2ec3c3764774f2076c',
+
   // MongoDB connection options
   mongo: {
     uri:    process.env.MONGOLAB_URI ||

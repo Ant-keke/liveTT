@@ -54,7 +54,7 @@ exports.show = function(req, res) {
     if(!data) { return res.status(404).send('Not Found'); }
     data.populate({path:'team.dom.players team.ext.players',model:'Player'}).populate({path:'comments.author',model:'User'},function (err, match){
       if(err) { return handleError(res, err); }
-      return res.json(match);
+      return res.status(200).json(match);
     });
   });
 };

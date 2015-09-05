@@ -360,7 +360,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
-            'bower_components/**/*',
+            '!bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/images/wave.png',
             'assets/fonts/**/*',
@@ -443,7 +443,7 @@ module.exports = function (grunt) {
           'rm -r cordova/www',
           'mv cordova/public cordova/www',
           'cd cordova',
-          'cordova build',
+          'cordova run',
           'cd ..'
         ].join('&&')
       }

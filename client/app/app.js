@@ -9,15 +9,14 @@ angular.module('liveTtApp', [
   'ui.bootstrap',
   'ngMaterial',
   'ngMessages',
-  'angularMoment',
-  'angular-tour'
+  'angularMoment'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
     $urlRouterProvider
       .otherwise('/');
 
-    $locationProvider.html5Mode(true);
+    // $locationProvider.html5Mode(false);
     $httpProvider.interceptors.push('authInterceptor');
   })
 
