@@ -19,6 +19,16 @@ var passport = require('passport');
 module.exports = function(app) {
   var env = app.get('env');
 
+
+  var allowCrossDomain = function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+      next();
+  }
+  app.use(allowCrossDomain);
+
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .factory('User', function ($resource) {
-    return $resource('/api/users/:id/:controller', {
+  .factory('User', function ($resource, ENV) {
+    return $resource(ENV.apiEndpoint + 'api/users/:id/:controller', {
       id: '@_id'
     },
     {

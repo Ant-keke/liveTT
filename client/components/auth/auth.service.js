@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, $mdToast) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, $mdToast, ENV) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -20,7 +20,7 @@ angular.module('liveTtApp')
         var cb = callback || angular.noop;
         var deferred = $q.defer();
 
-        $http.post('/auth/local', {
+        $http.post(ENV.apiEndpoint + 'auth/local', {
           username: user.username,
           password: user.password
         }).

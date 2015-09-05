@@ -16,7 +16,7 @@
           </md-select>
         </div>
 
-        <div layout layout-sm="row">
+        <div layout layout-sm="column">
           <md-select placeholder="Division (*)" ng-model="newMatch.division" required name="division" flex="50">
             <md-option ng-repeat="div in divisions" value="{{div}}">{{div}}</md-option>
           </md-select>
@@ -28,7 +28,7 @@
           </md-input-container>
         </div>
       
-        <div layout layout-sm="row" ng-if="['D1','D2','D3','D4','D5'].indexOf(newMatch.division) > -1">
+        <div layout layout-sm="column" ng-if="['D1','D2','D3','D4','D5'].indexOf(newMatch.division) > -1">
           <md-input-container flex>
             <label>Département {{departements}}</label>
             <md-select placeholder="Département (*)" ng-model="newMatch.ligue" name="ligue">
@@ -37,7 +37,7 @@
           </md-input-container>
         </div>
 
-        <div layout layout-sm="row" ng-if="['R1','R2','R3','R4','R5','PR'].indexOf(newMatch.division) > -1">
+        <div layout layout-sm="column" ng-if="['R1','R2','R3','R4','R5','PR'].indexOf(newMatch.division) > -1">
           <md-input-container flex>
             <label>Ligue</label>
             <md-select placeholder="Ligue (*)" ng-model="newMatch.ligue" name="ligue">
@@ -46,7 +46,7 @@
           </md-input-container>
         </div>
 
-        <div layout layout-sm="row" ng-if="newMatch.division == 'PNZ'">
+        <div layout layout-sm="column" ng-if="newMatch.division == 'PNZ'">
           <md-input-container flex>
             <label>Zone</label>
             <md-select placeholder="Zone (*)" ng-model="newMatch.ligue" name="ligue">
@@ -71,7 +71,7 @@
             </div>
           </md-input-container>
         </div>
-        <div layout layout-sm="row">
+        <div layout layout-sm="column">
           <md-input-container flex>
             <label>Date (*)</label>
             <input type="date" ng-model="newMatch.date" name="date" required>
@@ -81,7 +81,7 @@
           </md-input-container>
           <timepicker ng-model="newMatch.date" hour-step="1" minute-step="1" show-meridian="false"></timepicker>
         </div>
-        <div layout layout-sm="row">
+        <div layout layout-sm="column">
           <md-input-container flex="40">
             <label>Title (*)</label>
             <input ng-model="newMatch.name" required name="name">

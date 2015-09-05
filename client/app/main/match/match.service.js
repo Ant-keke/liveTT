@@ -2,7 +2,7 @@
 
 angular.module('liveTtApp')
   .service('$match', function ($q, $http, Auth, $mdToast, $timeout, ENV) {
-  console.log(ENV);
+  
   var service = {};
 	service.getMatchs = function() {
 		var deferred = $q.defer();
