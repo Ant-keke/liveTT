@@ -459,12 +459,12 @@ module.exports = function (grunt) {
       },
       production: {
         options: {
-          dest: '<%= yeoman.dist %>/scripts/config.js'
+          dest: '<%= yeoman.client %>/app/config.js'
         },
         constants: {
           ENV: {
             name: 'production',
-            apiEndpoint: 'http://livett2.herokuapp.com/'
+            apiEndpoint: 'https://livett2.herokuapp.com/'
           }
         }
       }
