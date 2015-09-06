@@ -10,7 +10,6 @@ angular.module('liveTtApp')
       	players: '='
       },
       link: function (scope, element, attrs) {
-      	console.log('eee');
       	for (var i = scope.players.length - 1; i >= 0; i--) {
       		if(scope.id == scope.players[i]._id) {
       			scope.fullname = scope.players[i].firstname + ' ' + scope.players[i].lastname;

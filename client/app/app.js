@@ -26,8 +26,8 @@ angular.module('liveTtApp', [
       // Add authorization token to headers
       request: function (config) {
         config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+        if (window.localStorage.getItem('token')) {
+          config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token');
         }
         return config;
       },
@@ -37,7 +37,7 @@ angular.module('liveTtApp', [
         if(response.status === 401) {
           $location.path('/login');
           // remove any stale tokens
-          $cookieStore.remove('token');
+          window.localStorage.removeItem('token');
           return $q.reject(response);
         }
         else {

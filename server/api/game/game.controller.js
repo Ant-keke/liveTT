@@ -68,6 +68,10 @@ exports.destroy = function(req, res) {
   Game.findById(req.params.id, function (err, game) {
     if(err) { return handleError(res, err); }
     if(!game) { return res.status(404).send('Not Found'); }
+    /* Asynchronously get and persist match to trigger socket */
+    Match.findById(game.match, function (err, match) {
+      match.save()
+    });
     game.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.status(204).send('No Content');

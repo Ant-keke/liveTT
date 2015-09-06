@@ -21,7 +21,7 @@ module.exports = function(app) {
 
 
   var allowCrossDomain = function(req, res, next) {
-      res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+      res.header('Access-Control-Allow-Origin', 'http://livett2.herokuapp.com');
       res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
       res.header('Access-Control-Allow-Headers', 'Content-Type');
 

@@ -10,25 +10,25 @@
 	    </div>
 		</md-toolbar>
 		<md-dialog-content>
-		<md-subheader class="md-no-sticky">{{match.team.dom.name}}</md-subheader>
-		<md-list-item ng-repeat="(index,player) in match.team.dom.players">
-		    <md-checkbox ng-change='updateTeam("dom",player)' ng-model="needmodel"></md-checkbox>
-      		<p>{{player.firstname}} {{player.lastname}}</p>
-		</md-list-item>
-		<md-divider></md-divider>
-		<md-subheader class="md-no-sticky">{{match.team.ext.name}}</md-subheader>
-		<md-list-item ng-repeat="player in match.team.ext.players">
-		    <md-checkbox ng-change='updateTeam("ext",player)' ng-model="needmodel2"></md-checkbox>
-      		<p>{{player.firstname}} {{player.lastname}}</p>
-		</md-list-item>
-		<md-divider></md-divider>
-    	<span flex></span>
-	    <md-button ng-click="cancel()" class="md-primary">
-	     Annuler
-	    </md-button>
-	    <md-button ng-click="submit()" class="md-primary">
-	     Ok
-	    </md-button>
+			<md-subheader class="md-no-sticky">{{match.team.dom.name}}</md-subheader>
+			<md-list-item ng-repeat="(index,player) in match.team.dom.players">
+			    <md-checkbox ng-change='updateTeam("dom",player)' ng-model="needmodel"></md-checkbox>
+	      		<p>{{player.firstname}} {{player.lastname}}</p>
+			</md-list-item>
+			<md-divider></md-divider>
+			<md-subheader class="md-no-sticky">{{match.team.ext.name}}</md-subheader>
+			<md-list-item ng-repeat="player in match.team.ext.players">
+			    <md-checkbox ng-change='updateTeam("ext",player)' ng-model="needmodel2"></md-checkbox>
+	      		<p>{{player.firstname}} {{player.lastname}}</p>
+			</md-list-item>
+			<md-divider></md-divider>
+	    	<span flex></span>
+		    <md-button ng-click="cancel()" class="md-primary">
+		     Annuler
+		    </md-button>
+		    <md-button ng-click="submit()" class="md-primary">
+		     Ok
+		    </md-button>
 	  </md-dialog-content>
   </form>
 </md-dialog>

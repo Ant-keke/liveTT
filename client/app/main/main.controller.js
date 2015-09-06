@@ -77,25 +77,29 @@ angular.module('liveTtApp')
 
     $scope.showAddGameModal = function(ev) {
       if($scope.isAuthor){
-        $mdDialog.show({
-          controller: 'AddGameController',
-          templateUrl: 'app/main/components/add-game.html',
-          parent: angular.element(document.body),
-          targetEvent: ev,
-          locals: {
-           match: angular.copy($scope.match)
-         }
-        })
-        .then(function(game) {
-          game.match = $scope.match;
-          $http.post(ENV.apiEndpoint + 'api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
-            $scope.match.games.push(res.data);
-            $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
-          },
-          function(err){
-            $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
+        if ($scope.match.team.dom.players.length == 0 || $scope.match.team.ext.players.length == 0) {
+              $mdToast.show($mdToast.simple().content('Veuillez ajouter au minimum un joueur par équipe (onglet Equipe) avant de créer un match').theme('danger-toast'));
+        } else {
+          $mdDialog.show({
+            controller: 'AddGameController',
+            templateUrl: 'app/main/components/add-game.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            locals: {
+             match: angular.copy($scope.match)
+           }
+          })
+          .then(function(game) {
+            game.match = $scope.match;
+            $http.post(ENV.apiEndpoint + 'api/matchs/' + $scope.match._id + '/games', game).then(function(res) {
+              $scope.match.games.push(res.data);
+              $mdToast.show($mdToast.simple().content('Match correctement crée!').theme('success-toast'));
+            },
+            function(err){
+              $mdToast.show($mdToast.simple().content('Une erreur est survenu!').theme('danger-toast'));
+            });
           });
-        });
+        }
       }
     };
     
@@ -162,7 +166,7 @@ angular.module('liveTtApp')
       if($scope.match.active) {
           return true;
         } else {
-          $mdToast.show($mdToast.simple().content('Impossible de modifier le score. Ce live n\'est pas encore actif').theme('danger-toast'));
+          $mdToast.show($mdToast.simple().content('Impossible de modifier le score. Ce live n\'est pas encore actif. Swippez en haut à droite pour l\'activer').theme('danger-toast'));
           return false;
         }
     };

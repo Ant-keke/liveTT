@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('liveTtApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, $mdToast, ENV) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $q, $mdToast, ENV) {
     var currentUser = {};
-    if($cookieStore.get('token')) {
+    if(window.localStorage.getItem('token')) {
       currentUser = User.get();
     }
 
@@ -25,7 +25,7 @@ angular.module('liveTtApp')
           password: user.password
         }).
         success(function(data) {
-          $cookieStore.put('token', data.token);
+          window.localStorage.setItem('token', data.token);
           currentUser = User.get();
           deferred.resolve(data);
           /** Success notification */
@@ -47,7 +47,7 @@ angular.module('liveTtApp')
        * @param  {Function}
        */
       logout: function() {
-        $cookieStore.remove('token');
+        window.localStorage.removeItem('token');
         currentUser = {};
          $mdToast.show($mdToast.simple().content('Vous etes maintenant déconnecté').theme('danger-toast'));
         
@@ -65,7 +65,7 @@ angular.module('liveTtApp')
 
         return User.save(user,
           function(data) {
-            $cookieStore.put('token', data.token);
+            window.localStorage.setItem('token', data.token);
             currentUser = User.get();
             return cb(user);
           },
@@ -146,7 +146,7 @@ angular.module('liveTtApp')
        * Get auth token
        */
       getToken: function() {
-        return $cookieStore.get('token');
+        return window.localStorage.getItem('token');
       }
     };
   });
