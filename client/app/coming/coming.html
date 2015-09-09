@@ -5,6 +5,7 @@
     <span flex>Rencontres à venir</span>
   </h2>
 </md-toolbar>
+<div ng-hide="matchs.length == 0" ng-include="'components/match/filter-match.html'" style="width:100%"></div>
 <div ng-hide="matchs.length == 0" ng-include="'components/match/match-list.html'" style="width:100%"></div>
 <div ng-show="matchs.length == 0">
 	<h4 class="text-center">Il n'y a aucun lives à venir actuellement</h4>

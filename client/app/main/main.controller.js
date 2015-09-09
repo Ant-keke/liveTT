@@ -311,7 +311,7 @@ angular.module('liveTtApp')
     /* Socket */
     function createSocket(){
       socket.syncUpdates($scope.match._id, $scope.match,  function(event, item) {
-          console.log(item)
+          console.log(item);
           $scope.match = item;
       });
      $scope.$on('$destroy', function () {

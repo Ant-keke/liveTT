@@ -23,8 +23,8 @@
             Live
           </md-switch>
           <div layout-align="center">
-            <h3 class="md-title" > {{ match.name | uppercase }} </h3>
-            <p > {{ match.body }} </p>
+            <h3 class="md-title tt-match-title" > {{ match.name | uppercase }} </h3>
+            <p class="tt-match-desc"> {{ match.body }} </p>
             <div ng-show="match.games.length == 0" style="position:relative;top:30px">
               <h4 class="text-center tt-no-matchs-yet">Aucun match actuellement</h4>
               <img src="assets/images/no_matchs_2.png" class="tt-img-no-matchs"/>

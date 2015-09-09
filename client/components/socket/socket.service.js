@@ -3,9 +3,15 @@
 
 angular.module('liveTtApp')
   .factory('socket', function(socketFactory, ENV) {
+    var baseUrl;
+    if(ENV.apiEndpoint == '/') {
+      baseUrl = ':9000/';
+    } else {
+      baseUrl = ENV.apiEndpoint;
+    }
 
     // socket.io now auto-configures its connection when we ommit a connection url
-    var ioSocket = io(ENV.apiEndpoint, {
+    var ioSocket = io(baseUrl, {
       // Send auth token on connection, you will need to DI the Auth service above
       // 'query': 'token=' + Auth.getToken()
       path: '/socket.io-client'
